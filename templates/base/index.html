@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>WWW Game</title>
-</head>
-<body>
-    <h1>Питончик</h1>
-</body>
-</html>
+{% extends 'layout.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">Добро пожаловать в тестовое приложение на Django</p>
+        <hr class="my-4">
+        <p>Данный элемент создан с использование библиотеки Bootstrap 4</p>
+    </div>
+{% endblock %}
