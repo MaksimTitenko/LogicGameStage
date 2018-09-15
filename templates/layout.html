@@ -14,5 +14,11 @@
             <h1>Main Page</h1>
         {% endblock %}
     </div>
+    <script>
+        $(document).ready(()=>{
+            {% block scripts %}
+            {% endblock %}
+        });
+    </script>
 </body>
 </html>
