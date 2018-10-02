@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'RoundTable',
+    'crispy_forms',
+    'mptt',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -124,3 +127,67 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'common_static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+
+
+
+
+
+
+# Это я подключил чисто для удобного мне отображения формы регистрации и логина
+# Установка - pip install django-crispy-forms, можно через настройки интерпретатора
+# Потом добавьте это в installed_apps
+# Пользуйтесь в шаблонизаторе. Как - увидите в шаблонах login и registration
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# Это ссылка на переопределенную модель Юзера в нашем приложении
+# Пока не используется, потому что модель не переопределена.
+#
+# AUTH_USER_MODEL = 'RoundTable.User'
+
+
+# Пытаюсь подключить api фейсбука и вконтакте, пока не очень выходит.
+# Точнее НЕ входит, вот это каламбур, лол.
+# Надо кое-что установить, но опять же, лучше в настройках интерпретатора
+# pip install django-mptt>=0.8.7
+# pip install facebook - sdk
+# pip install vk
+#
+# Хотя все равно зайти через них не получится
+
+
+
+
+
+DOMAIN = 'http://127.0.0.1:8000'
+
+VK_APP_ID = '6709264'
+VKONTAKTE_APP_ID = VK_APP_ID
+VK_API_SECRET = 'wGc02HYDEP0wFOrFh2Xw'
+VKONTAKTE_APP_SECRET = VK_API_SECRET
+
+VK_REDIRECT = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&' \
+              'redirect_uri={domain}/vk_callback&scope=email&' \
+              'response_type=code&v=5.56&revoke=1'.format(client_id=VK_APP_ID,
+                                                          domain=DOMAIN)
+VK_URL = 'https://oauth.vk.com/access_token?client_id={client}&' \
+         'client_secret={secret}&' \
+         'redirect_uri={domain}/vk_callback&' \
+         'code='.format(secret=VK_API_SECRET, client=VK_APP_ID, domain=DOMAIN)
+
+
+
+FACEBOOK_URL = 'https://graph.facebook.com/v2.7/oauth/access_token?client_id={client_id}&' \
+               'client_secret={client_secret}&' \
+               'redirect_uri={domain}/facebook_callback/&'\
+               'code={code}'
+
+FACEBOOK_APP_ID = '486613158522471'
+FACEBOOK_API_SECRET = 'abde6ea5ba503b8dc828a12ac7c626e8'
+
+FACEBOOK_REDIRECT = 'https://www.facebook.com/v2.7/dialog/oauth?' \
+                    'client_id={client_id}&redirect_uri={domain}/facebook_callback/'\
+    .format(client_id=FACEBOOK_APP_ID, domain=DOMAIN)

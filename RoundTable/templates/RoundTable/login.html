@@ -1,0 +1,22 @@
+{%extends 'RoundTable/base/index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+<h3 class="text-center">Авторизация</h3>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class="btn btn-success btn-block" value="Войти в систему">
+    <div class="login-block">
+        <div class="login-with-social">
+            <a href="{% url 'vk_login' %}" class="btn btn-social btn-vk"><span class="fa fa-vk"></span>VKontakte</a>
+            <a href="{% url 'facebook_login' %}" class="btn btn-social btn-facebook"><span class="fa fa-facebook"></span>Facebook</a>
+        </div>
+    </div>
+
+</form>
+{% endblock content %}
