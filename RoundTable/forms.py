@@ -1,11 +1,20 @@
 from django import forms
 from django.forms import ModelForm
-from django.contrib import auth
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from .models import User
+
+SEX_CHOICES = (
+    ('Мужчина', u"Мужчина"),
+    ('Женщина', u"Женщина"),
+)
+
+COUNTRIES = (
+    ('Беларусь', 'Беларусь'),
+    ('Россия', 'Россия'),
+    ('Украина', 'Украина')
+)
 
 
-class LoginForm(forms.ModelForm):
+class LoginForm(ModelForm):
     class Meta:
         model = User
         fields = ('username', 'password')
@@ -15,7 +24,7 @@ class LoginForm(forms.ModelForm):
         }
 
         widgets = {
-            'password':forms.PasswordInput()
+            'password': forms.PasswordInput()
         }
 
     def clean(self):
@@ -29,70 +38,7 @@ class LoginForm(forms.ModelForm):
             raise forms.ValidationError('Неверный пароль!')
 
 
-
-# class RegistrationForm(forms.ModelForm):
-#     # password = forms.CharField(widget=forms.PasswordInput)
-#     # password_check = forms.CharField(widget=forms.PasswordInput)
-#
-#     class Meta:
-#         model = User
-#         fields = (
-#             'username',
-#             'first_name',
-#             'last_name',
-#             'email',
-#             'country',
-#             'city',
-#             'phone',
-#             'password',
-#             'password_check',
-#         )
-#         labels = {
-#             'username':'Логин',
-#             'first_name':'Имя',
-#             'last_name':'Фамилия',
-#             'email':'Электронная почта',
-#             'country':'Страна',
-#             'city':'Город',
-#             'phone':'Телефон',
-#             'password':'Пароль',
-#             'password_check':'Повторите пароль',
-#         }
-#
-#
-#         help_texts = {
-#             'password':'Придумайте пароль',
-#             'email':''
-#         }
-#
-#         widgets = {
-#             'password':forms.PasswordInput(),
-#             'password_check':forms.PasswordInput()
-#         }
-#
-#     def clean(self):
-#         username = self.cleaned_data['username']
-#         password = self.cleaned_data['password']
-#         password_check = self.cleaned_data['password_check']
-#         email = self.cleaned_data['email']
-#
-#
-#         if User.objects.filter(username=username).exists():
-#             raise forms.ValidationError({
-#                 'username': 'Пожалуйста выберите другое имя пользователя, т.к. пользователь с таким логином уже зарегистрирован в системе!'},
-#                 code='user exists')
-#
-#         if password != password_check:
-#             raise forms.ValidationError({
-#                 'password': '',
-#                 'password_check': 'Вы ошиблись при вводе паролей, они не совпадают, введите повторно!'},
-#                 code='passwords do not match', )
-#         if User.objects.filter(email=email).exists():
-#             raise forms.ValidationError({'email': 'Пользователь с таким email уже зарегистрирован!'},
-#                                         code='email exists')
-
-
-class RegistrationForm(forms.ModelForm):
+class RegistrationForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password_check = forms.CharField(widget=forms.PasswordInput)
 
@@ -100,11 +46,19 @@ class RegistrationForm(forms.ModelForm):
         model = User
         fields = [
             'username',
-            'first_name',
-            'last_name',
             'email',
             'password',
             'password_check',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'date_birth',
+            'phone',
+            'country',
+            'city',
+            'avatar',
+            'bio'
         ]
 
     def __init__(self, *args, **kwargs):
@@ -115,8 +69,7 @@ class RegistrationForm(forms.ModelForm):
         self.fields['password_check'].label = 'Повторите пароль'
         self.fields['first_name'].label = 'Имя'
         self.fields['last_name'].label = 'Фамилия'
-        self.fields['email'].label = 'Ваш email'
-        self.fields['email'].help_text = 'Пожалуйста, указывайте реальный адрес'
+        self.fields['email'].label = 'Эл.почта'
 
     def clean(self):
         username = self.cleaned_data['username']
@@ -126,13 +79,13 @@ class RegistrationForm(forms.ModelForm):
 
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError({
-                'username': 'Пожалуйста выберите другое имя пользователя, т.к. пользователь с таким логином уже зарегистрирован в системе!'},
+                'username': 'Пользователь с таким логином уже есть в системе!'},
                 code='user exists')
 
         if password != password_check:
             raise forms.ValidationError({
                 'password': '',
-                'password_check': 'Вы ошиблись при вводе паролей, они не совпадают, введите повторно!'},
+                'password_check': 'Пароли не совпадают!'},
                 code='passwords do not match', )
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError({'email': 'Пользователь с таким email уже зарегистрирован!'},

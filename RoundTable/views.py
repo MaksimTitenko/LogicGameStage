@@ -1,6 +1,6 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
-from .forms import RegistrationForm, LoginForm
+from .forms import LoginForm, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
@@ -9,10 +9,12 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib import auth
 from www_game_site import settings
+
 import facebook
 import json
 from httplib2 import Http
 import vk
+
 
 class HomePageView(TemplateView):
     template_name = 'RoundTable/base/index.html'
@@ -27,8 +29,6 @@ class HomePageView(TemplateView):
 # Возможно, надо создавать нового суперюзера
 # Как я узнал, что они создаются? Очень просто: при регистрации вводил те же данные, выскакивало исключение.
 # Если вы успешны, то вас редиректнет на главную страницу.
-
-
 
 def registration_view(request):
     form = RegistrationForm(request.POST or None)
@@ -51,8 +51,9 @@ def registration_view(request):
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
         return HttpResponseRedirect(reverse('index'))
-    context = {'form':form}
-    return render(request,'RoundTable/registration.html',context)
+    context = {'form': form}
+    return render(request, 'RoundTable/registration.html', context)
+
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -63,16 +64,14 @@ def login_view(request):
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'RoundTable/login.html', context)
-
 
 
 ####################################################################################################
 # Класс посвящен авторизации через соцсети.
 # Это одна из проблем, которые придется еще решить
 # + кроме существующих функций нужно будет добавить еще авторизацию через google
-
 
 
 class CallbackView(generic.View):

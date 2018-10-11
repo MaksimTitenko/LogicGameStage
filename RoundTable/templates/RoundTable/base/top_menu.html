@@ -26,7 +26,7 @@
             </li>
             {% else %}
             <li>
-                <p class="navbar-text">Здравствуйте, {{ request.user }}</p>
+                <p class="navbar-text">Здравствуйте, {{ request.RoundTable_user }}</p>
             </li>
             <li>
                 <a href="{% url 'logout' %}">Выйти</a>
