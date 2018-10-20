@@ -1,5 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
+
+from RoundTable.models import UserAccount
 from .forms import LoginForm, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -128,3 +130,14 @@ class CallbackView(generic.View):
             )
         auth.login(request, new_user)
         return HttpResponseRedirect(reverse_lazy('index'))
+
+
+class UserAccountView(generic.View):
+    template_name = 'user_account.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        context = {
+            'current_user': user,
+        }
+        return render(self.request, self.template_name, context)

@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
+from django_extensions import settings
 
 
 class User(AbstractUser):
@@ -44,3 +46,16 @@ class User(AbstractUser):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
 
     # плейсхолдеры для телефона, мыла и даты рождения!
+
+
+class UserAccount(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200, default=None)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.user.username
+
+    def get_absolute_url(self):
+        return reverse('account_view', kwargs={'user': self.user.username})

@@ -24,10 +24,12 @@
             <li>
                 <a href="{% url 'registration' %}">Регистрация</a>
             </li>
+
             {% else %}
             <li>
                 <p class="navbar-text">Здравствуйте, {{ request.RoundTable_user }}</p>
             </li>
+                <li><a href="{% url 'account_view' request.user %}">Личный кабинет</a></li>
             <li>
                 <a href="{% url 'logout' %}">Выйти</a>
             </li>
