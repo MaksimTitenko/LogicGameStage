@@ -7,20 +7,29 @@
     <title>News Site - {% block title %}Main Page{% endblock %}</title>
 </head>
 <body>
-    <div class="container">
-        {% include 'RoundTable/base/top_menu.html' %}
-        <hr>
+<div class="container">
+    {% include 'RoundTable/base/top_menu.html' %}
+    <hr>
+    <br>
+    <br>
+    {% block content %}
+        <h1>Main Page</h1>
+    {% endblock content %}
+    <br>
 
 
-        {% block content %}
-            <h1>Main Page</h1>
+    <footer class="py-2 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+</div>
+<script>
+    $(document).ready(() => {
+        {% block scripts %}
         {% endblock %}
-    </div>
-    <script>
-        $(document).ready(()=>{
-            {% block scripts %}
-            {% endblock %}
-        });
-    </script>
+    });
+</script>
 </body>
 </html>

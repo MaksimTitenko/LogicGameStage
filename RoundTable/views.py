@@ -1,13 +1,15 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
+from RoundTable.models import User
 from .forms import LoginForm, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+
 from django.contrib import auth
 from www_game_site import settings
 
@@ -146,3 +148,13 @@ class UserAccountView(generic.View):
 
 class GameModesView(TemplateView):
     template_name = 'RoundTable/game_modes.html'
+
+
+class TeamModView(TemplateView):
+    template_name = 'RoundTable/team_mod.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TeamModView, self).get_context_data(*args, **kwargs)
+        # 6 первых пользователей, как только добавим систеу приглашений это нужно пофиксить
+        context['users'] = User.objects.all()[:6]
+        return context

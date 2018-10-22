@@ -11,7 +11,8 @@ from .views import (
     login_view,
     CallbackView,
     UserAccountView,
-    GameModesView)
+    GameModesView,
+    TeamModView)
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='index'),
@@ -20,7 +21,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
     path('game_modes/', GameModesView.as_view(), name='game_modes'),
-
+    path('team_mod/', TeamModView.as_view(), name='team_mod'),
 
     path('vk_login/', RedirectView.as_view(url=settings.VK_REDIRECT), name='vk_login'),
     path('vk_callback/', CallbackView.vk_callback, name='vk_callback'),
