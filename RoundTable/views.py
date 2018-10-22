@@ -133,7 +133,7 @@ class CallbackView(generic.View):
 
 
 class UserAccountView(generic.View):
-    template_name = 'user_account.html'
+    template_name = 'RoundTable/user_account.html'
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
