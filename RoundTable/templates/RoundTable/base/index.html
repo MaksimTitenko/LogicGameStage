@@ -57,10 +57,7 @@ Home
 
 
 {% block content %}
-<div class="jumbotron">
-    <h1 class="display-4">Hello, world!</h1>
-    <p class="lead">Добро пожаловать в тестовое приложение на Django</p>
-    <hr class="my-4">
-    <p>Данный элемент создан с использование библиотеки Bootstrap 4</p>
+<div class="container">
+    <a href="{% url 'game_modes' %}"><button class="btn btn-primary" style="color: blue">Начать игру</button></a>
 </div>
-{% endblock %}
+{% endblock content %}

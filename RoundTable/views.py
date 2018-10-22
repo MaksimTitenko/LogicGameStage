@@ -1,7 +1,6 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import UserAccount
 from .forms import LoginForm, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -132,6 +131,8 @@ class CallbackView(generic.View):
         return HttpResponseRedirect(reverse_lazy('index'))
 
 
+######################################################################################################
+
 class UserAccountView(generic.View):
     template_name = 'RoundTable/user_account.html'
 
@@ -141,3 +142,7 @@ class UserAccountView(generic.View):
             'current_user': user,
         }
         return render(self.request, self.template_name, context)
+
+
+class GameModesView(TemplateView):
+    template_name = 'RoundTable/game_modes.html'
