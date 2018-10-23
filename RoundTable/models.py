@@ -59,3 +59,18 @@ class UserAccount(models.Model):
 
     def get_absolute_url(self):
         return reverse('account_view', kwargs={'user': self.user.username})
+
+
+class TeamMod(models.Model):
+    #captain = models.CharField(max_length=30)
+    team = models.ManyToManyField(User, blank=True)
+    team_name = models.CharField(max_length=30, verbose_name='Название пространсва', unique=True)
+    slug = models.SlugField()
+    number_of_all_games = models.PositiveIntegerField(default=0)
+    number_of_correct_answers = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'Команда {team_name}'
+
+    def get_absolute_url(self):
+        return reverse('team_view', kwargs={'slug': self.slug})

@@ -1,11 +1,11 @@
 {% extends 'RoundTable/layout.html' %}
 {% block content %}
-    {% for user in users %}
-        {% if forloop.first %}
-            <li class="list-group-item-primary">{{ user.username }}</li>
-        {% else %}
-            <li class="list-group-item-secondary">{{ user.username }}</li>
-        {% endif %}
-    {% endfor %}
-<li class="list-group-item"></li>
+{#    {% for user in users %}#}
+{#        {% if forloop.first %}#}
+{#            <li class="list-group-item-primary">{{ user.username }}</li>#}
+{#        {% else %}#}
+{#            <li class="list-group-item-secondary">{{ user.username }}</li>#}
+{#        {% endif %}#}
+{#    {% endfor %}#}
+{#<li class="list-group-item"></li>#}
 {% endblock content %}

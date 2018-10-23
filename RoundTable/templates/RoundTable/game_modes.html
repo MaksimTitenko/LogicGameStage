@@ -1,8 +1,16 @@
 {% extends 'RoundTable/layout.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
         <div class="row">
-            <a class="col-sm-4" href="{% url 'team_mod' %}">
+            <form action="" method="POST">
+                {{ form.error }}
+                {% csrf_token %}
+                {{ form|crispy }}
+            </form>
+            <input type="submit" value="Создать пространство">
+
+            <a class="col-sm-4" href="#">
                 <button class="btn btn-primary">Мультиплеерная игра</button>
             </a>
             <a class="col-sm-8" href="#">

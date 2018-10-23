@@ -1,14 +1,14 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User
-from .forms import LoginForm, RegistrationForm
+from RoundTable.models import User, TeamMod
+from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from django.contrib import auth
 from www_game_site import settings
@@ -146,15 +146,36 @@ class UserAccountView(generic.View):
         return render(self.request, self.template_name, context)
 
 
-class GameModesView(TemplateView):
+class CreateTeamView(generic.View):
     template_name = 'RoundTable/game_modes.html'
 
+    def get(self, request, *args, **kwargs):
+        form = CreateTeamForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, self.template_name, context)
 
-class TeamModView(TemplateView):
-    template_name = 'RoundTable/team_mod.html'
+    def post(self, request, *args, **kwargs):
+        form = CreateTeamForm(request.POST or None)
+        if form.is_valid():
+            new_team = form.save(commit=False)
+            team_name = form.cleaned_data['team_name']
+            # captain = self.request.POST.get('captain')
+            new_team.save()
+            TeamMod.objects.create(team_name=team_name, team=request.user)
+            return HttpResponseRedirect('/')
+        context = {'form': form}
+        return render(self.request, self.template_name, context)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(TeamModView, self).get_context_data(*args, **kwargs)
-        # 6 первых пользователей, как только добавим систеу приглашений это нужно пофиксить
-        context['users'] = User.objects.all()[:6]
-        return context
+
+# class TeamModView(generic.View):
+#     template_name = 'RoundTable/team_mod.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         captain = self.kwargs.get('captain')
+#         current_team = TeamMod.objects.get(user=User.objects.get(username=captain))
+#         context = {
+#             'current_team': current_team
+#         }
+#         render(self.request, self.template_name, context)

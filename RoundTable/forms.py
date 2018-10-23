@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import User
+from .models import User, TeamMod
 
 SEX_CHOICES = (
     ('Мужчина', u"Мужчина"),
@@ -90,3 +90,22 @@ class RegistrationForm(ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError({'email': 'Пользователь с таким email уже зарегистрирован!'},
                                         code='email exists')
+
+
+class CreateTeamForm(forms.Form):
+    team_name = forms.CharField()
+
+    class Meta:
+        model = TeamMod
+        fields = [
+            'team_name',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(CreateTeamForm, self).__init__(*args, **kwargs)
+        self.fields['team_name'].help_text = 'Название пространсва'
+
+    def clean(self):
+        team_name = self.cleaned_data['team_name']
+        if TeamMod.objects.filter(team_name=team_name).exists():
+            raise forms.ValidationError('Пространство с таким именем уже существует')
