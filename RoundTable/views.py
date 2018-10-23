@@ -151,10 +151,11 @@ class TeamView(generic.View):
 
     def get(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug')
-        current_team = TeamMod.objects.filter(slug=slug)
-        context = {
-            'current_team': current_team,
-        }
+        user = self.request.user
+        current_team = TeamMod.objects.get(slug=slug)
+        context = {}
+        if user in current_team.team.all():
+            context['current_team'] = current_team
         return render(self.request, self.template_name, context)
 
 
