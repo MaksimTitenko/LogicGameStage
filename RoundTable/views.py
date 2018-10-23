@@ -146,6 +146,18 @@ class UserAccountView(generic.View):
         return render(self.request, self.template_name, context)
 
 
+class TeamView(generic.View):
+    template_name = 'RoundTable/team_mod.html'
+
+    def get(self, request, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        current_team = TeamMod.objects.filter(slug=slug)
+        context = {
+            'current_team': current_team,
+        }
+        return render(self.request, self.template_name, context)
+
+
 class CreateTeamView(generic.View):
     template_name = 'RoundTable/game_modes.html'
 
@@ -159,23 +171,11 @@ class CreateTeamView(generic.View):
     def post(self, request, *args, **kwargs):
         form = CreateTeamForm(request.POST or None)
         if form.is_valid():
-            new_team = form.save(commit=False)
             team_name = form.cleaned_data['team_name']
-            # captain = self.request.POST.get('captain')
-            new_team.save()
-            TeamMod.objects.create(team_name=team_name, team=request.user)
-            return HttpResponseRedirect('/')
+            TeamMod.objects.create(team_name=team_name)
+            current_team = TeamMod.objects.get(team_name=team_name)
+            current_team.team.add(request.user)
+            current_team.save()
+            return HttpResponseRedirect(reverse_lazy('team_mod', args=[current_team.slug]))
         context = {'form': form}
         return render(self.request, self.template_name, context)
-
-
-# class TeamModView(generic.View):
-#     template_name = 'RoundTable/team_mod.html'
-#
-#     def get(self, request, *args, **kwargs):
-#         captain = self.kwargs.get('captain')
-#         current_team = TeamMod.objects.get(user=User.objects.get(username=captain))
-#         context = {
-#             'current_team': current_team
-#         }
-#         render(self.request, self.template_name, context)

@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django_extensions import settings
+from django.utils.text import slugify
 
 
 class User(AbstractUser):
@@ -62,15 +63,34 @@ class UserAccount(models.Model):
 
 
 class TeamMod(models.Model):
-    #captain = models.CharField(max_length=30)
     team = models.ManyToManyField(User, blank=True)
-    team_name = models.CharField(max_length=30, verbose_name='Название пространсва', unique=True)
-    slug = models.SlugField()
+    team_name = models.CharField(max_length=30, verbose_name='Название пространсва')
+    slug = models.SlugField(max_length=30)
     number_of_all_games = models.PositiveIntegerField(default=0)
     number_of_correct_answers = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f'Команда {team_name}'
+        return f'Команда {self.team_name}'
 
     def get_absolute_url(self):
-        return reverse('team_view', kwargs={'slug': self.slug})
+        return reverse('team_mod', kwargs={'slug': self.slug})
+
+    def get_unique_slug(self):
+        """
+        Takes a model instance, sluggable field name (such as 'title') of that
+        model as string, slug field name (such as 'slug') of the model as string;
+        returns a unique slug as string.
+        """
+        slug = slugify(self.team_name)
+        unique_slug = slug
+        extension = 1
+        while TeamMod.objects.filter(slug=unique_slug).exists():
+            unique_slug = '{}-{}'.format(slug, extension)
+            extension += 1
+        return unique_slug
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self.get_unique_slug()
+        super().save(*args, **kwargs)
+

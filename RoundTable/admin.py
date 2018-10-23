@@ -41,10 +41,8 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal = ('groups', 'user_permissions')
 
 
-class TeamModAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('team_name',)}
 
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(UserAccount)
-admin.site.register(TeamMod, TeamModAdmin)
+admin.site.register(TeamMod)
