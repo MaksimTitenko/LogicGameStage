@@ -49,19 +49,6 @@ class User(AbstractUser):
     # плейсхолдеры для телефона, мыла и даты рождения!
 
 
-class UserAccount(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200, default=None)
-    email = models.EmailField()
-
-    def __str__(self):
-        return self.user.username
-
-    def get_absolute_url(self):
-        return reverse('account_view', kwargs={'user': self.user.username})
-
-
 class TeamMod(models.Model):
     team = models.ManyToManyField(User, blank=True)
     team_name = models.CharField(max_length=30, verbose_name='Название пространсва')
@@ -94,3 +81,16 @@ class TeamMod(models.Model):
             self.slug = self.get_unique_slug()
         super().save(*args, **kwargs)
 
+
+class UserAccount(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200, default=None)
+    email = models.EmailField()
+    teams = models.ManyToManyField(TeamMod, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+    def get_absolute_url(self):
+        return reverse('account_view', kwargs={'user': self.user.username})

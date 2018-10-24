@@ -13,8 +13,6 @@ from .views import (
     UserAccountView,
     CreateTeamView, TeamView)
 
-#    TeamModView)
-
 urlpatterns = [
     path('', HomePageView.as_view(), name='index'),
     path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),

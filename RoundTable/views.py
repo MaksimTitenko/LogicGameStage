@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod
+from RoundTable.models import User, TeamMod, UserAccount
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -49,7 +49,12 @@ def registration_view(request):
         new_user.last_name = last_name
         new_user.email = email
         new_user.save()
+
         login_user = authenticate(username=username, password=password)
+        UserAccount.objects.create(user=User.objects.get(username=new_user.username),
+                                   first_name=new_user.first_name,
+                                   last_name=new_user.last_name,
+                                   email=new_user.email)
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
@@ -139,9 +144,9 @@ class UserAccountView(generic.View):
     template_name = 'RoundTable/user_account.html'
 
     def get(self, request, *args, **kwargs):
-        user = self.request.user
+        current_user_account = UserAccount.objects.get(user=User.objects.get(username=self.request.user.username))
         context = {
-            'current_user': user,
+            'current_user_account': current_user_account,
         }
         return render(self.request, self.template_name, context)
 
@@ -154,9 +159,13 @@ class TeamView(generic.View):
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
         context = {}
-        if user in current_team.team.all():
+        if user in current_team.team.all() and user.is_authenticated:
+
+            UserAccount.objects.get(user=user).teams.add(current_team)
             context['current_team'] = current_team
-        return render(self.request, self.template_name, context)
+            return render(self.request, self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse_lazy('login'))
 
 
 class CreateTeamView(generic.View):

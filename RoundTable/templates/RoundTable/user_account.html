@@ -1,11 +1,20 @@
 {% extends 'RoundTable/layout.html' %}
 {% block content %}
-<div class="col-sm-4">
-    <p class="text-center"><img src="{{ current_user.avatar.url }}" width="60%"></p>
-    <h4><strong>Личная информация</strong></h4>
-    <p>Логин: {{ current_user.username }}</p>
-    <p>Имя: {{ current_user.first_name }}</p>
-    <p>Фамилия: {{ current_user.last_name }}</p>
-    <p>email: {{ current_user.email }}</p>
-</div>
+    <div class="container">
+        <div class="col-sm-4">
+           <p class="text-center"><img src="{{ current_user_account.user.avatar.url }}" width="60%"></p>
+            <h4><strong>Личная информация</strong></h4>
+            <p>Логин: {{ current_user_account.user.username }}</p>
+            <p>Имя: {{ current_user_account.first_name }}</p>
+            <p>Фамилия: {{ current_user_account.last_name }}</p>
+            <p>email: {{ current_user_account.email }}</p>
+        </div>
+        <div class="col-sm-8">
+            {% for team in current_user_account.teams.all %}
+                <a href="{{ team.get_absolute_url }}"><li class="list-group">{{ team.team_name }}</li></a>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock content %}
+{% block jquery %}
+{% endblock %}

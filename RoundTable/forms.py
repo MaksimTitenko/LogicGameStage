@@ -103,7 +103,8 @@ class CreateTeamForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(CreateTeamForm, self).__init__(*args, **kwargs)
-        self.fields['team_name'].help_text = 'Название пространсва'
+        self.fields['team_name'].label = 'Введите название пространства'
+        self.fields['team_name'].help_text = 'Должно быть уникально'
 
     def clean(self):
         team_name = self.cleaned_data['team_name']
