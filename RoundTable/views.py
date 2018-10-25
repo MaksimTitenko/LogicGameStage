@@ -160,7 +160,6 @@ class TeamView(generic.View):
         current_team = TeamMod.objects.get(slug=slug)
         context = {}
         if user in current_team.team.all() and user.is_authenticated:
-
             UserAccount.objects.get(user=user).teams.add(current_team)
             context['current_team'] = current_team
             return render(self.request, self.template_name, context)
