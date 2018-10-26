@@ -165,15 +165,9 @@ class TeamView(generic.View):
         current_team = TeamMod.objects.get(slug=slug)
         current_users = UserInTeam.objects.filter(user=user, team=current_team)
         context = {}
-<<<<<<< HEAD
-        if user in current_team.team.all() and user.is_authenticated:
-            UserAccount.objects.get(user=user).teams.add(current_team)
-            context['current_team'] = current_team
-=======
         if user.is_authenticated and current_users.exists():
             context['team'] = current_team
             context['users'] = current_users
->>>>>>> TeamModView
             return render(self.request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse_lazy('login'))
