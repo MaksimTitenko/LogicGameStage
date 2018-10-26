@@ -36,7 +36,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name='Контактный телефон', blank=True)
     country = models.CharField(max_length=40, choices=COUNTRIES, default=COUNTRIES[0][0], verbose_name='Страна')
     city = models.CharField(max_length=40, blank=True, verbose_name='Город')
-    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=avatar_upload_to, default='RoundTable/default_avatar/default.png', null=False, blank=True, verbose_name='Аватар')
     bio = models.TextField(max_length=400, blank=True, verbose_name='О себе')
     singleplayer = models.IntegerField(default=0, verbose_name='Одиночных игр: ')
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
@@ -50,7 +50,6 @@ class User(AbstractUser):
 
 
 class TeamMod(models.Model):
-    team = models.ManyToManyField(User, blank=True)
     team_name = models.CharField(max_length=30, verbose_name='Название пространсва')
     slug = models.SlugField(max_length=30)
     number_of_all_games = models.PositiveIntegerField(default=0)
@@ -87,10 +86,18 @@ class UserAccount(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200, default=None)
     email = models.EmailField()
-    teams = models.ManyToManyField(TeamMod, blank=True)
 
     def __str__(self):
         return self.user.username
 
     def get_absolute_url(self):
         return reverse('account_view', kwargs={'user': self.user.username})
+
+
+class UserInTeam(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
+    is_captain = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Пользователь {self.user.username} в команде {self.team.team_name}'
