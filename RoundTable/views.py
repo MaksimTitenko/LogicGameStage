@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod, UserAccount
+from RoundTable.models import User, TeamMod, UserAccount, UserInTeam
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -42,12 +42,14 @@ def registration_view(request):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         email = form.cleaned_data['email']
+        avatar = form.cleaned_data['avatar']
 
         new_user.username = username
         new_user.set_password(password)
         new_user.first_name = first_name
         new_user.last_name = last_name
         new_user.email = email
+        new_user.avatar = avatar
         new_user.save()
 
         login_user = authenticate(username=username, password=password)
@@ -144,10 +146,13 @@ class UserAccountView(generic.View):
     template_name = 'RoundTable/user_account.html'
 
     def get(self, request, *args, **kwargs):
-        current_user_account = UserAccount.objects.get(user=User.objects.get(username=self.request.user.username))
+        user_account = UserAccount.objects.get(user=User.objects.get(username=self.request.user.username))
+        user_in_team = UserInTeam.objects.filter(user=self.request.user)
         context = {
-            'current_user_account': current_user_account,
+            'user_account': user_account,
         }
+        if user_in_team.exists():
+            context['user_in_teams'] = user_in_team
         return render(self.request, self.template_name, context)
 
 
@@ -158,10 +163,17 @@ class TeamView(generic.View):
         slug = self.kwargs.get('slug')
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
+        current_users = UserInTeam.objects.filter(user=user, team=current_team)
         context = {}
+<<<<<<< HEAD
         if user in current_team.team.all() and user.is_authenticated:
             UserAccount.objects.get(user=user).teams.add(current_team)
             context['current_team'] = current_team
+=======
+        if user.is_authenticated and current_users.exists():
+            context['team'] = current_team
+            context['users'] = current_users
+>>>>>>> TeamModView
             return render(self.request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse_lazy('login'))
@@ -181,10 +193,10 @@ class CreateTeamView(generic.View):
         form = CreateTeamForm(request.POST or None)
         if form.is_valid():
             team_name = form.cleaned_data['team_name']
-            TeamMod.objects.create(team_name=team_name)
-            current_team = TeamMod.objects.get(team_name=team_name)
-            current_team.team.add(request.user)
+            current_team = TeamMod.objects.create(team_name=team_name)
             current_team.save()
-            return HttpResponseRedirect(reverse_lazy('team_mod', args=[current_team.slug]))
+            UserInTeam.objects.create(team=current_team, user=request.user, is_captain=True)
+            return HttpResponseRedirect(
+                reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
         context = {'form': form}
         return render(self.request, self.template_name, context)
