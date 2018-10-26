@@ -1,0 +1,15 @@
+{% extends 'RoundTable/layout.html' %}
+{% block content %}
+
+    {% for user in users %}
+        {% if user.is_captain %}
+            <li class="list-group-item-primary">{{ user.user.username }}</li>
+        {% else %}
+            <li class="list-group-item-secondary">{{ user.user.username }}</li>
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}
+{% block jquery %}
+
+{% endblock %}

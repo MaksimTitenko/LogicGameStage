@@ -9,21 +9,23 @@ from .views import (
     HomePageView,
     registration_view,
     login_view,
-    CallbackView
-)
+    CallbackView,
+    UserAccountView,
+    CreateTeamView, TeamView)
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='index'),
+    path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),
+    path('user_account/<str:user>', UserAccountView.as_view(), name='account_view'),
     path('registration/', registration_view, name='registration'),
     path('login/', login_view, name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
-
+    path('game_modes/', CreateTeamView.as_view(), name='game_modes'),
 
     path('vk_login/', RedirectView.as_view(url=settings.VK_REDIRECT), name='vk_login'),
     path('vk_callback/', CallbackView.vk_callback, name='vk_callback'),
     path('facebook_login/', RedirectView.as_view(url=settings.FACEBOOK_REDIRECT), name='facebook_login'),
     path('facebook_callback/', CallbackView.facebook_callback, name='facebook_callback'),
-
 
 ]
 

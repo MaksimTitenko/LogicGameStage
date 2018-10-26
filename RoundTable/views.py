@@ -1,12 +1,15 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
-from .forms import LoginForm, RegistrationForm
+
+from RoundTable.models import User, TeamMod, UserAccount, UserInTeam
+from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+
 from django.contrib import auth
 from www_game_site import settings
 
@@ -39,14 +42,21 @@ def registration_view(request):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         email = form.cleaned_data['email']
+        avatar = form.cleaned_data['avatar']
 
         new_user.username = username
         new_user.set_password(password)
         new_user.first_name = first_name
         new_user.last_name = last_name
         new_user.email = email
+        new_user.avatar = avatar
         new_user.save()
+
         login_user = authenticate(username=username, password=password)
+        UserAccount.objects.create(user=User.objects.get(username=new_user.username),
+                                   first_name=new_user.first_name,
+                                   last_name=new_user.last_name,
+                                   email=new_user.email)
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
@@ -128,3 +138,65 @@ class CallbackView(generic.View):
             )
         auth.login(request, new_user)
         return HttpResponseRedirect(reverse_lazy('index'))
+
+
+######################################################################################################
+
+class UserAccountView(generic.View):
+    template_name = 'RoundTable/user_account.html'
+
+    def get(self, request, *args, **kwargs):
+        user_account = UserAccount.objects.get(user=User.objects.get(username=self.request.user.username))
+        user_in_team = UserInTeam.objects.filter(user=self.request.user)
+        context = {
+            'user_account': user_account,
+        }
+        if user_in_team.exists():
+            context['user_in_teams'] = user_in_team
+        return render(self.request, self.template_name, context)
+
+
+class TeamView(generic.View):
+    template_name = 'RoundTable/team_mod.html'
+
+    def get(self, request, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        user = self.request.user
+        current_team = TeamMod.objects.get(slug=slug)
+        current_users = UserInTeam.objects.filter(user=user, team=current_team)
+        context = {}
+<<<<<<< HEAD
+        if user in current_team.team.all() and user.is_authenticated:
+            UserAccount.objects.get(user=user).teams.add(current_team)
+            context['current_team'] = current_team
+=======
+        if user.is_authenticated and current_users.exists():
+            context['team'] = current_team
+            context['users'] = current_users
+>>>>>>> TeamModView
+            return render(self.request, self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse_lazy('login'))
+
+
+class CreateTeamView(generic.View):
+    template_name = 'RoundTable/game_modes.html'
+
+    def get(self, request, *args, **kwargs):
+        form = CreateTeamForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = CreateTeamForm(request.POST or None)
+        if form.is_valid():
+            team_name = form.cleaned_data['team_name']
+            current_team = TeamMod.objects.create(team_name=team_name)
+            current_team.save()
+            UserInTeam.objects.create(team=current_team, user=request.user, is_captain=True)
+            return HttpResponseRedirect(
+                reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
+        context = {'form': form}
+        return render(self.request, self.template_name, context)

@@ -2,6 +2,9 @@ from __future__ import unicode_literals
 import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
+from django_extensions import settings
+from django.utils.text import slugify
 
 
 class User(AbstractUser):
@@ -33,7 +36,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name='Контактный телефон', blank=True)
     country = models.CharField(max_length=40, choices=COUNTRIES, default=COUNTRIES[0][0], verbose_name='Страна')
     city = models.CharField(max_length=40, blank=True, verbose_name='Город')
-    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=avatar_upload_to, default='RoundTable/default_avatar/default.png', null=False, blank=True, verbose_name='Аватар')
     bio = models.TextField(max_length=400, blank=True, verbose_name='О себе')
     singleplayer = models.IntegerField(default=0, verbose_name='Одиночных игр: ')
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
@@ -44,3 +47,57 @@ class User(AbstractUser):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
 
     # плейсхолдеры для телефона, мыла и даты рождения!
+
+
+class TeamMod(models.Model):
+    team_name = models.CharField(max_length=30, verbose_name='Название пространсва')
+    slug = models.SlugField(max_length=30)
+    number_of_all_games = models.PositiveIntegerField(default=0)
+    number_of_correct_answers = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'Команда {self.team_name}'
+
+    def get_absolute_url(self):
+        return reverse('team_mod', kwargs={'slug': self.slug})
+
+    def get_unique_slug(self):
+        """
+        Takes a model instance, sluggable field name (such as 'title') of that
+        model as string, slug field name (such as 'slug') of the model as string;
+        returns a unique slug as string.
+        """
+        slug = slugify(self.team_name)
+        unique_slug = slug
+        extension = 1
+        while TeamMod.objects.filter(slug=unique_slug).exists():
+            unique_slug = '{}-{}'.format(slug, extension)
+            extension += 1
+        return unique_slug
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self.get_unique_slug()
+        super().save(*args, **kwargs)
+
+
+class UserAccount(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200, default=None)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.user.username
+
+    def get_absolute_url(self):
+        return reverse('account_view', kwargs={'user': self.user.username})
+
+
+class UserInTeam(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
+    is_captain = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Пользователь {self.user.username} в команде {self.team.team_name}'
