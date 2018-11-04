@@ -34,7 +34,10 @@
                     <li>
                         <p class="navbar-text">Здравствуйте, {{ request.user.username }}</p>
                     </li>
-                    <li><a href="{% url 'account_view' request.user.username %}">Личный кабинет</a></li>
+{#                    Если захочется сделать UserAccount для каждого пользователя с возможностью просмотра понадобится этот код#}
+{#                    <li><a href="{% url 'account_view' request.user.username %}">Личный кабинет</a></li>#}
+
+                    <li><a href="{% url 'account_view' %}">Личный кабинет</a></li>
                     <li>
                         <a href="{% url 'logout' %}">Выйти</a>
                     </li>

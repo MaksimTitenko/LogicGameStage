@@ -22,8 +22,8 @@ class User(AbstractUser):
     class Meta:
         db_table = 'auth_user'
 
-    def avatar_upload_to(instance, filename):
-        return os.path.join('RoundTable/avatars/', instance.username + os.path.splitext(filename)[1])
+    def avatar_upload_to(self, filename):
+        return os.path.join('RoundTable/avatars/', self.username + os.path.splitext(filename)[1])
 
     username = models.CharField(max_length=30, verbose_name='Логин', unique=True)
     first_name = models.CharField(max_length=30, verbose_name='Имя')
@@ -36,7 +36,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name='Контактный телефон', blank=True)
     country = models.CharField(max_length=40, choices=COUNTRIES, default=COUNTRIES[0][0], verbose_name='Страна')
     city = models.CharField(max_length=40, blank=True, verbose_name='Город')
-    avatar = models.ImageField(upload_to=avatar_upload_to, default='RoundTable/default_avatar/default.png', null=False, blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, default='RoundTable/default_avatar/default.png', verbose_name='Аватар')
     bio = models.TextField(max_length=400, blank=True, verbose_name='О себе')
     singleplayer = models.IntegerField(default=0, verbose_name='Одиночных игр: ')
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
@@ -45,6 +45,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
+    # Если захочется сделать UserAccount для каждого пользователя с возможностью просмотра понадобится этот код
+
+    # def get_absolute_url(self):
+    #     return reverse('account_view', kwargs={'user': self.username})
 
     # плейсхолдеры для телефона, мыла и даты рождения!
 
@@ -80,18 +84,6 @@ class TeamMod(models.Model):
             self.slug = self.get_unique_slug()
         super().save(*args, **kwargs)
 
-
-class UserAccount(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200, default=None)
-    email = models.EmailField()
-
-    def __str__(self):
-        return self.user.username
-
-    def get_absolute_url(self):
-        return reverse('account_view', kwargs={'user': self.user.username})
 
 
 class UserInTeam(models.Model):

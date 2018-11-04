@@ -37,7 +37,6 @@ class LoginForm(ModelForm):
         if user and not user.check_password(password):
             raise forms.ValidationError('Неверный пароль!')
 
-
 class RegistrationForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password_check = forms.CharField(widget=forms.PasswordInput)
@@ -58,7 +57,7 @@ class RegistrationForm(ModelForm):
             'country',
             'city',
             'avatar',
-            'bio'
+            'bio',
         ]
 
     def __init__(self, *args, **kwargs):

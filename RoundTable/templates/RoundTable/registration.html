@@ -8,7 +8,7 @@
 <div class="col-sm-8 col-sm-offset-2">
 <hr>
 
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" class="btn btn-success btn-block" value="Зарегистрироваться">

@@ -2,12 +2,12 @@
 {% block content %}
     <div class="container">
         <div class="col-sm-4">
-           <p class="text-center"><img src="{{ user_account.user.avatar.url }}" width="60%"></p>
+           <p class="text-center"><img src="{{ user.avatar.url }}" width="60%"></p>
             <h4><strong>Личная информация</strong></h4>
-            <p>Логин: {{ user_account.user.username }}</p>
-            <p>Имя: {{ user_account.first_name }}</p>
-            <p>Фамилия: {{ user_account.last_name }}</p>
-            <p>email: {{ user_account.email }}</p>
+            <p>Логин: {{ user.username }}</p>
+            <p>Имя: {{ user.first_name }}</p>
+            <p>Фамилия: {{ user.last_name }}</p>
+            <p>email: {{ user.email }}</p>
         </div>
         <div class="col-sm-8">
             <h4>Пространсва</h4>

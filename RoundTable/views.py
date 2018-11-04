@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod, UserAccount, UserInTeam
+from RoundTable.models import User, TeamMod, UserInTeam
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -34,7 +34,7 @@ class HomePageView(TemplateView):
 # Если вы успешны, то вас редиректнет на главную страницу.
 
 def registration_view(request):
-    form = RegistrationForm(request.POST or None)
+    form = RegistrationForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         new_user = form.save(commit=False)
         username = form.cleaned_data['username']
@@ -53,10 +53,6 @@ def registration_view(request):
         new_user.save()
 
         login_user = authenticate(username=username, password=password)
-        UserAccount.objects.create(user=User.objects.get(username=new_user.username),
-                                   first_name=new_user.first_name,
-                                   last_name=new_user.last_name,
-                                   email=new_user.email)
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
@@ -146,10 +142,10 @@ class UserAccountView(generic.View):
     template_name = 'RoundTable/user_account.html'
 
     def get(self, request, *args, **kwargs):
-        user_account = UserAccount.objects.get(user=User.objects.get(username=self.request.user.username))
+        user = self.request.user
         user_in_team = UserInTeam.objects.filter(user=self.request.user)
         context = {
-            'user_account': user_account,
+            'user': user,
         }
         if user_in_team.exists():
             context['user_in_teams'] = user_in_team
