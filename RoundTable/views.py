@@ -1,11 +1,14 @@
+from django.db.models import Q
+from django.template import RequestContext
+from django.views.generic import FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
 from RoundTable.models import User, TeamMod, UserInTeam
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.urls import reverse_lazy
 from django.views import generic
 # from django.contrib.auth.models import User
@@ -192,3 +195,13 @@ class CreateTeamView(generic.View):
                 reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
         context = {'form': form}
         return render(self.request, self.template_name, context)
+
+class SearchView(FormView):
+    template_name = 'RoundTable/result.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            q = request.GET.get('q')
+            if q is not None:
+                results = User.objects.filter(Q(username__startswith=q) | Q(last_name__istartswith=q))
+                return render(self.request, self.template_name, {'results': results})

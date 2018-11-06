@@ -1,0 +1,20 @@
+{% if results|length %}
+	<table class="table table-striped">
+	<tr>
+		<td colspan=3>
+		<strong>Found {{ results|length }} players</strong>
+		</td>
+	</tr>
+
+	</tr>
+	{% for r in results %}
+	<tr>
+		<td>{{ r.username }} {{ r.first_name }} {{ r.last_name }}</td>
+	</tr>
+	{% endfor %}
+	</table>
+{% else %}
+	<div class="note">
+	Your search yielded no results
+	</div>
+{% endif %}

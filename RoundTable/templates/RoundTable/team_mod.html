@@ -1,15 +1,35 @@
 {% extends 'RoundTable/layout.html' %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#q').keyup(function () {
+                q = $('#q').val();
+                $('#results').html('&nbsp;').load('{% url "search" %}?q=' + q);
+            });
+        });
+
+    </script>
+{% endblock %}
+
 {% block content %}
 
     {% for user in users %}
         {% if user.is_captain %}
             <li class="list-group-item-primary">{{ user.user.username }}</li>
+            <div class="form-signin">
+                <input id="q" type="text" placeholder="Search player names here..."/>
+                <br/>
+                <div class="margin">
+                    <div id="results"></div>
+                </div>
+            </div>
         {% else %}
             <li class="list-group-item-secondary">{{ user.user.username }}</li>
         {% endif %}
     {% endfor %}
 
 {% endblock content %}
-{% block jquery %}
 
+{% block jquery %}
 {% endblock %}
