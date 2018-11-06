@@ -36,7 +36,8 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name='Контактный телефон', blank=True)
     country = models.CharField(max_length=40, choices=COUNTRIES, default=COUNTRIES[0][0], verbose_name='Страна')
     city = models.CharField(max_length=40, blank=True, verbose_name='Город')
-    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, default='RoundTable/default_avatar/default.png', verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True,
+                               default='RoundTable/default_avatar/default.png', verbose_name='Аватар')
     bio = models.TextField(max_length=400, blank=True, verbose_name='О себе')
     singleplayer = models.IntegerField(default=0, verbose_name='Одиночных игр: ')
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
@@ -85,7 +86,6 @@ class TeamMod(models.Model):
         super().save(*args, **kwargs)
 
 
-
 class UserInTeam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
@@ -93,3 +93,12 @@ class UserInTeam(models.Model):
 
     def __str__(self):
         return f'Пользователь {self.user.username} в команде {self.team.team_name}'
+
+
+class Invite(models.Model):
+    slug = models.SlugField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Инвайт {self.user.username} в команду {self.team.team_name}'

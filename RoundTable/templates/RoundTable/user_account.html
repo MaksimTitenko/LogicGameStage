@@ -9,12 +9,16 @@
             <p>Фамилия: {{ user.last_name }}</p>
             <p>email: {{ user.email }}</p>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <h4>Пространсва</h4>
             {% for current_team in user_in_teams %}
                 <a href="{{ current_team.team.get_absolute_url }}"><li class="list-group">{{ current_team.team.team_name }}</li></a>
             {% endfor %}
         </div>
+    <div class="col-sm-4">
+        <h4>Инвайты</h4>
+
+    </div>
     </div>
 {% endblock content %}
 {% block jquery %}
