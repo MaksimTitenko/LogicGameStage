@@ -34,8 +34,6 @@ class User(AbstractUser):
     gender = models.CharField(max_length=7, verbose_name='Пол', choices=SEX_CHOICES)
     date_birth = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     phone = models.CharField(max_length=15, verbose_name='Контактный телефон', blank=True)
-    country = models.CharField(max_length=40, choices=COUNTRIES, default=COUNTRIES[0][0], verbose_name='Страна')
-    city = models.CharField(max_length=40, blank=True, verbose_name='Город')
     avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True,
                                default='RoundTable/default_avatar/default.png', verbose_name='Аватар')
     bio = models.TextField(max_length=400, blank=True, verbose_name='О себе')
@@ -97,8 +95,9 @@ class UserInTeam(models.Model):
 
 class Invite(models.Model):
     slug = models.SlugField()
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_for = models.OneToOneField(User, on_delete=models.CASCADE)
+    username_from = models.CharField(max_length=30)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Инвайт {self.user.username} в команду {self.team.team_name}'
+        return f'Инвайт от {self.username_from.username} в команду {self.team.team_name} для {self.user_for}'

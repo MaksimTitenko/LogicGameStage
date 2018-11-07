@@ -1,15 +1,15 @@
 {% extends 'RoundTable/layout.html' %}
 
 {% block extra_js %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#q').keyup(function () {
-                q = $('#q').val();
-                $('#results').html('&nbsp;').load('{% url "search" %}?q=' + q);
-            });
-        });
+<script type="text/javascript">
+$( document ).ready( function() {
+    $( '#q' ).keyup( function() {
+        q = $( '#q' ).val();
+        $( '#results' ).html( '&nbsp;' ).load( '{% url "search" %}?q=' + q );
+    });
+});
 
-    </script>
+</script>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
         {% if user.is_captain %}
             <li class="list-group-item-primary">{{ user.user.username }}</li>
             <div class="form-signin">
-                <input id="q" type="text" placeholder="Search player names here..."/>
+                <input class="form-control mr-sm-2" id="q" type="text" placeholder="Search player names here..."/>
                 <br/>
                 <div class="margin">
                     <div id="results"></div>

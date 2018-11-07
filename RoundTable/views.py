@@ -4,9 +4,9 @@ from django.views.generic import FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod, UserInTeam
+from RoundTable.models import User, TeamMod, UserInTeam, Invite
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.shortcuts import render, render_to_response
 from django.urls import reverse_lazy
@@ -196,6 +196,7 @@ class CreateTeamView(generic.View):
         context = {'form': form}
         return render(self.request, self.template_name, context)
 
+
 class SearchView(FormView):
     template_name = 'RoundTable/result.html'
 
@@ -204,4 +205,16 @@ class SearchView(FormView):
             q = request.GET.get('q')
             if q is not None:
                 results = User.objects.filter(Q(username__startswith=q) | Q(last_name__istartswith=q))
+
                 return render(self.request, self.template_name, {'results': results})
+
+
+class AddInviteView(generic.View):
+    template_name = 'RoundTable/user_account.html'
+
+    def get(self, request, *args, **kwargs):
+        team_name = self.request.GET.get('team_name')
+        username = self.request.GET.get('username')
+        Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
+                              username_from=request.user.username, user=User.objects.get(username=username))
+        return JsonResponse({'ok': 'ok'})

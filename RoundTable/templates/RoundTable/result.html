@@ -1,20 +1,16 @@
 {% if results|length %}
-	<table class="table table-striped">
-	<tr>
-		<td colspan=3>
-		<strong>Found {{ results|length }} players</strong>
-		</td>
-	</tr>
-
-	</tr>
-	{% for r in results %}
-	<tr>
-		<td>{{ r.username }} {{ r.first_name }} {{ r.last_name }}</td>
-	</tr>
-	{% endfor %}
-	</table>
+    <table class="table table-striped">
+        </tr>
+        {% for user in results %}
+            {% if user != request.user %}
+                <tr>
+                    <td><a class="invite" href="#">{{ user.username }} {{ user.first_name }} {{ user.last_name }}</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
 {% else %}
-	<div class="note">
-	Your search yielded no results
-	</div>
+    <div class="note">
+        Your search yielded no results
+    </div>
 {% endif %}

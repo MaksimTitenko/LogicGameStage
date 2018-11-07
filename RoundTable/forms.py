@@ -54,8 +54,6 @@ class RegistrationForm(ModelForm):
             'gender',
             'date_birth',
             'phone',
-            'country',
-            'city',
             'avatar',
             'bio',
         ]

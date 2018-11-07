@@ -11,7 +11,7 @@ from .views import (
     login_view,
     CallbackView,
     UserAccountView,
-    CreateTeamView, TeamView, SearchView)
+    CreateTeamView, TeamView, SearchView, AddInviteView)
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='index'),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
     path('game_modes/', CreateTeamView.as_view(), name='game_modes'),
     path('search/', SearchView.as_view(), name='search'),
+    path('add_invite', AddInviteView.as_view(), name='add_invite'),
     path('vk_login/', RedirectView.as_view(url=settings.VK_REDIRECT), name='vk_login'),
     path('vk_callback/', CallbackView.vk_callback, name='vk_callback'),
     path('facebook_login/', RedirectView.as_view(url=settings.FACEBOOK_REDIRECT), name='facebook_login'),
