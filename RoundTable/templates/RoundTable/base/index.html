@@ -1,15 +1,30 @@
 {% extends 'RoundTable/layout.html' %}
-{% load static %}
-
-
-{% block title %}
-Home
-{% endblock %}
-
-
-
+{% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-    <a href="{% url 'game_modes' %}"><button class="btn btn-primary" style="color: blue">Начать игру</button></a>
-</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                {% for team in teams %}
+                    <a class="btn btn-primary" href="{{ team.team.get_absolute_url }}" role="button">{{ team.team.team_name }}</a>
+                {% endfor %}
+            </div>
+            <div class="col-sm-8">
+                <form action="" method="POST">
+                    {{ form.error }}
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-primary" type="submit"
+                           value="Мультиплеерная игра">
+                </form>
+            </div>
+
+
+            <a class="col-sm-8" href="#">
+                <button class="btn btn-primary">Одиночная игра</button>
+            </a>
+        </div>
+    </div>
 {% endblock content %}
+{% block jquery %}
+{% endblock %}

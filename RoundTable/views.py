@@ -22,10 +22,6 @@ from httplib2 import Http
 import vk
 
 
-class HomePageView(TemplateView):
-    template_name = 'RoundTable/base/index.html'
-
-
 # Вьюшки для авторизации и регистрации сделаны с использованием стандартной модели Юзера.
 # Он импортирован выше.
 # Это не окончательный вариант, потому что необходимо расширять ее добавлением другой информации, например, авы.
@@ -175,14 +171,20 @@ class TeamView(generic.View):
 
 
 class CreateTeamView(generic.View):
-    template_name = 'RoundTable/game_modes.html'
+    template_name = 'RoundTable/base/index.html'
 
     def get(self, request, *args, **kwargs):
-        form = CreateTeamForm()
-        context = {
-            'form': form
-        }
-        return render(self.request, self.template_name, context)
+
+        if request.user.is_authenticated:
+            form = CreateTeamForm()
+            teams = UserInTeam.objects.filter(user=self.request.user)
+            context = {
+                'teams':teams,
+                'form': form
+            }
+            return render(self.request, self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse_lazy('login'))
 
     def post(self, request, *args, **kwargs):
         form = CreateTeamForm(request.POST or None)

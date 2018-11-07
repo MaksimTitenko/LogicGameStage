@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 from django.views.generic import RedirectView
 
 from .views import (
-    HomePageView,
     registration_view,
     login_view,
     CallbackView,
@@ -14,7 +13,7 @@ from .views import (
     CreateTeamView, TeamView, SearchView, AddInviteView)
 
 urlpatterns = [
-    path('', HomePageView.as_view(), name='index'),
+    path('', CreateTeamView.as_view(), name='index'),
     path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),
 
     # Если захочется сделать UserAccount для каждого пользователя с возможностью просмотра понадобится этот код
@@ -24,7 +23,7 @@ urlpatterns = [
     path('registration/', registration_view, name='registration'),
     path('login/', login_view, name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
-    path('game_modes/', CreateTeamView.as_view(), name='game_modes'),
+
     path('search/', SearchView.as_view(), name='search'),
     path('add_invite', AddInviteView.as_view(), name='add_invite'),
     path('vk_login/', RedirectView.as_view(url=settings.VK_REDIRECT), name='vk_login'),
