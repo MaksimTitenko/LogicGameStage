@@ -12,4 +12,4 @@
     pip install vk
     pip install Pillow
     
-Потом прописать python manage.py ru runserver
+Потом прописать python manage.py ru runserver для запуска сервера
