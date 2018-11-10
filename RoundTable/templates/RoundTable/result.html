@@ -4,7 +4,8 @@
         {% for user in results %}
             {% if user != request.user %}
                 <tr>
-                    <td><a class="invite" href="#">{{ user.username }} {{ user.first_name }} {{ user.last_name }}</a></td>
+                    <td><a class="invite" href="#">{{ user.username }} {{ user.first_name }} {{ user.last_name }}</a>
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
