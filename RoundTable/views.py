@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.shortcuts import render, render_to_response
 from django.urls import reverse_lazy
 from django.views import generic
-# from django.contrib.auth.models import User
 
 from django.contrib import auth
 from www_game_site import settings
@@ -145,6 +144,7 @@ class UserAccountView(generic.View):
         user_in_team = UserInTeam.objects.filter(user=self.request.user)
         context = {
             'user': user,
+            'current_view': self.__class__.__name__
         }
         if user_in_team.exists():
             context['user_in_teams'] = user_in_team
@@ -159,7 +159,7 @@ class TeamView(generic.View):
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
         current_users = UserInTeam.objects.filter(user=user, team=current_team)
-        context = {}
+        context = {'current_view': self.__class__.__name__}
 
         if user.is_authenticated and current_users.exists():
             context['team'] = current_team
@@ -179,8 +179,9 @@ class CreateTeamView(generic.View):
             form = CreateTeamForm()
             teams = UserInTeam.objects.filter(user=self.request.user)
             context = {
-                'teams':teams,
-                'form': form
+                'teams': teams,
+                'form': form,
+                'current_view': self.__class__.__name__
             }
             return render(self.request, self.template_name, context)
         else:
@@ -203,12 +204,12 @@ class SearchView(FormView):
     template_name = 'RoundTable/result.html'
 
     def get(self, request, *args, **kwargs):
-        if request.is_ajax():
-            q = request.GET.get('q')
+        if self.request.is_ajax():
+            q = self.request.GET.get('q')
             if q is not None:
                 results = User.objects.filter(Q(username__startswith=q) | Q(last_name__istartswith=q))
 
-                return render(self.request, self.template_name, {'results': results})
+                return JsonResponse({"results": list(results)})
 
 
 class AddInviteView(generic.View):

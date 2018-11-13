@@ -37,6 +37,7 @@ class LoginForm(ModelForm):
         if user and not user.check_password(password):
             raise forms.ValidationError('Неверный пароль!')
 
+
 class RegistrationForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password_check = forms.CharField(widget=forms.PasswordInput)
@@ -75,18 +76,13 @@ class RegistrationForm(ModelForm):
         email = self.cleaned_data['email']
 
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError({
-                'username': 'Пользователь с таким логином уже есть в системе!'},
-                code='user exists')
+            self.add_error(None, 'Пользователь с таким логином уже есть в системе!')
 
         if password != password_check:
-            raise forms.ValidationError({
-                'password': '',
-                'password_check': 'Пароли не совпадают!'},
-                code='passwords do not match', )
+            self.add_error(None, 'Пароли не совпадают!')
+
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError({'email': 'Пользователь с таким email уже зарегистрирован!'},
-                                        code='email exists')
+            self.add_error(None, 'Пользователь с таким email уже зарегистрирован!')
 
 
 class CreateTeamForm(forms.Form):
@@ -106,4 +102,6 @@ class CreateTeamForm(forms.Form):
     def clean(self):
         team_name = self.cleaned_data['team_name']
         if TeamMod.objects.filter(team_name=team_name).exists():
-            raise forms.ValidationError('Пространство с таким именем уже существует')
+            self.add_error(None, 'Команда с таким именем уже существует')
+
+
