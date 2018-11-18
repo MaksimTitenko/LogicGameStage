@@ -9,13 +9,15 @@
                 <img src="{% static 'img/table.svg' %}" width="350" height="250">
                 <div class="default-text">Командный режим</div>
                 <br />
-                {% for team in teams %}
-                    <a href="{{ team.team.get_absolute_url }}" class="btn team-button" role="button">
-                        {{ team.team.team_name }}
-                    </a>
-                    <br />
-                    <br />
-                {% endfor %}
+                <ul class="no-padding button-list">
+                    {% for team in teams %}
+                        <li>
+                            <a href="{{ team.team.get_absolute_url }}" class="btn team-button" role="button">
+                                {{ team.team.team_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
                 <form action="" method="post">
                     {{ form.error }}
                     {%  csrf_token %}
