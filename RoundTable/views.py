@@ -69,9 +69,11 @@ def login_view(request):
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
-    context = {'form': form}
+    context = {
+        'form': form,
+        'current_view': 'login'
+    }
     return render(request, 'RoundTable/login.html', context)
-
 
 ####################################################################################################
 # Класс посвящен авторизации через соцсети.
@@ -179,8 +181,9 @@ class CreateTeamView(generic.View):
             form = CreateTeamForm()
             teams = UserInTeam.objects.filter(user=self.request.user)
             context = {
-                'teams':teams,
-                'form': form
+                'teams': teams,
+                'form': form,
+                'current_view': 'playModePage'
             }
             return render(self.request, self.template_name, context)
         else:
@@ -195,7 +198,10 @@ class CreateTeamView(generic.View):
             UserInTeam.objects.create(team=current_team, user=request.user, is_captain=True)
             return HttpResponseRedirect(
                 reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
-        context = {'form': form}
+        context = {
+            'teams': UserInTeam.objects.filter(user=self.request.user),
+            'form': form
+        }
         return render(self.request, self.template_name, context)
 
 

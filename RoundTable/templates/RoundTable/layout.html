@@ -1,33 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% include 'RoundTable/base/css.html' %}
-    {% include 'RoundTable/base/js.html' %}
-    {% block extra_js %}
-    {% endblock extra_js %}
-    <title>News Site - {% block title %}Main Page{% endblock %}</title>
-</head>
-<body>
-<div class="container">
-    {% include 'RoundTable/base/top_menu.html' %}
-    <hr>
-    <br>
-    <br>
-    {% block content %}
-        <h1>Main Page</h1>
-    {% endblock content %}
-    <br>
-
-
-    <footer class="py-2 bg-dark">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
-        </div>
-        <!-- /.container -->
-    </footer>
-</div>
-{% block jquery %}
-{% endblock %}
-</body>
+<html lang="en" class="">
+    <head>
+        <meta charset="UTF-8">
+        {% include 'RoundTable/base/css.html' %}
+        {% include 'RoundTable/base/js.html' %}
+        <title>News Site - {% block title %}Main Page{% endblock %}</title>
+    </head>
+    <body class="{{ current_view }} d-flex flex-column h-100">
+        {% include 'RoundTable/base/top_menu.html' %}
+        {% block content %}
+            <h1>Main Page</h1>
+        {% endblock content %}
+        {% block extra_js %}
+        {% endblock extra_js %}
+    </body>
 </html>

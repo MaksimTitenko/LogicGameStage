@@ -1,30 +1,74 @@
 {% extends 'RoundTable/layout.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col text-center no-padding team-mode-container">
+            <div class="container team-list-container">
+                <img src="{% static 'img/table.svg' %}" width="350" height="250">
+                <div class="default-text">Командный режим</div>
+                <br />
                 {% for team in teams %}
-                    <a class="btn btn-primary" href="{{ team.team.get_absolute_url }}" role="button">{{ team.team.team_name }}</a>
+                    <a href="{{ team.team.get_absolute_url }}" class="btn team-button" role="button">
+                        {{ team.team.team_name }}
+                    </a>
+                    <br />
+                    <br />
                 {% endfor %}
-            </div>
-            <div class="col-sm-8">
-                <form action="" method="POST">
+                <form action="" method="post">
                     {{ form.error }}
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <input class="btn btn-primary" type="submit"
-                           value="Мультиплеерная игра">
+                    {%  csrf_token %}
+                    {{ from.crispy }}
+                    <div class="input-group new-team-input">
+                        <input id="team_name"
+                                name="team_name"
+                                type="text"
+                                class="form-control"
+                                placeholder="Новая команда..."
+                                aria-label="Новая команда..."
+                                aria-describedby="basic-addon2"
+                                required="required">
+                        <div id="test" class="input-group-append">
+                            <button type="submit" class="input-group-text">></button>
+                        </div>
+                    </div>
                 </form>
             </div>
-
-
-            <a class="col-sm-8" href="#">
-                <button class="btn btn-primary">Одиночная игра</button>
-            </a>
+        </div>
+        <div class="col no-padding">
+            <div class="text-center single-mode-container">
+                <img src="{% static 'img/lamp.svg' %}" width="38%">
+                <div class="default-text">Одиночный режим</div>
+                <br/>
+                <div>
+                    <a href="/" class="btn default-button dark-button" role="button">Темы</a>
+                    <a href="/" class="btn default-button light-button" role="button">Играть</a>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+            </div>
+            <div class="add-question-container">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <img src="{% static 'img/mail.svg' %}" width="250" height="250" style="margin-left: 40px">
+                        </div>
+                        <div class="col">
+                            <div class="default-text">
+                                Свой вопрос
+                            </div>
+                            <div>
+                                <a href="/" class="btn default-button light-button" role="button">
+                                    Написать
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {% endblock content %}
-{% block jquery %}
-{% endblock %}

@@ -1,24 +1,12 @@
 {% extends 'RoundTable/layout.html' %}
 
-{% block extra_js %}
-<script type="text/javascript">
-$( document ).ready( function() {
-    $( '#q' ).keyup( function() {
-        q = $( '#q' ).val();
-        $( '#results' ).html( '&nbsp;' ).load( '{% url "search" %}?q=' + q );
-    });
-});
-
-</script>
-{% endblock %}
-
 {% block content %}
 
     {% for user in users %}
         {% if user.is_captain %}
             <li class="list-group-item-primary">{{ user.user.username }}</li>
             <div class="form-signin">
-                <input class="form-control mr-sm-2" id="q" type="text" placeholder="Search player names here..."/>
+                <input class="form-control mr-sm-2" id="playerName" type="text" placeholder="Search player names here..."/>
                 <br/>
                 <div class="margin">
                     <div id="results"></div>
@@ -31,5 +19,19 @@ $( document ).ready( function() {
 
 {% endblock content %}
 
-{% block jquery %}
+{% block extra_js %}
+    <script type="text/javascript">
+        $( document ).ready( function() {
+            $.ajax({
+                 type:"POST",
+                 url:"http://localhost:8000/edit_favorites/",
+                 success: function(result){
+                     alert(result);
+                 }
+            });
+            $( '#playerName' ).keyup( function(e) {
+                $( '#results' ).html( '&nbsp;' ).load( '{% url "search" %}?q=' + $(e.target).val() );
+            });
+        });
+    </script>
 {% endblock %}
