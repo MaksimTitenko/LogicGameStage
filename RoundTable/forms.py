@@ -86,7 +86,7 @@ class RegistrationForm(ModelForm):
 
 
 class CreateTeamForm(forms.Form):
-    team_name = forms.CharField()
+    team_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = TeamMod

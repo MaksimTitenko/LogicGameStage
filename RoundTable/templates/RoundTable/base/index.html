@@ -2,31 +2,40 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-8">
-            {% for team in teams %}
-                <a class="btn btn-primary" href="{{ team.team.get_absolute_url }}"
-                   role="button">{{ team.team.team_name }}</a>
-            {% endfor %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                {% for team in teams %}
+                    <a class="btn btn-primary" href="{{ team.team.get_absolute_url }}"
+                       role="button">{{ team.team.team_name }}</a>
+                {% endfor %}
+            </div>
+            <div class="col-sm-8">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="col-sm-4">
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                    <input class="btn btn-primary" type="submit"
+                           value="Мультиплеерная игра">
+                </form>
+
+            </div>
+
+
+            <a class="col-sm-8" href="#">
+                <button class="btn btn-primary">Одиночная игра</button>
+            </a>
         </div>
-        <div class="col-sm-8">
-            <form action="" method="POST">
-                {{ form|crispy }}
-                {% csrf_token %}
-{#                {{ form|crispy }}#}
-                <input class="btn btn-primary" type="submit"
-                       value="Мультиплеерная игра">
-            </form>
-
-        </div>
-
-
-        <a class="col-sm-8" href="#">
-            <button class="btn btn-primary">Одиночная игра</button>
-        </a>
     </div>
-</div>
 {% endblock content %}
 {% block jquery %}
 {% endblock %}
