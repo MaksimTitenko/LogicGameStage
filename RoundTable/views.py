@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.shortcuts import render, render_to_response
 from django.urls import reverse_lazy
 from django.views import generic
-# from django.contrib.auth.models import User
 
 from django.contrib import auth
 from www_game_site import settings
@@ -56,7 +55,8 @@ def registration_view(request):
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
         return HttpResponseRedirect(reverse('index'))
-    context = {'form': form}
+    context = {'form': form,
+               'current_view': 'registration_view'}
     return render(request, 'RoundTable/registration.html', context)
 
 
@@ -69,10 +69,12 @@ def login_view(request):
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
+
     context = {
         'form': form,
         'current_view': 'login'
     }
+
     return render(request, 'RoundTable/login.html', context)
 
 ####################################################################################################
@@ -147,6 +149,7 @@ class UserAccountView(generic.View):
         user_in_team = UserInTeam.objects.filter(user=self.request.user)
         context = {
             'user': user,
+            'current_view': self.__class__.__name__
         }
         if user_in_team.exists():
             context['user_in_teams'] = user_in_team
@@ -161,7 +164,7 @@ class TeamView(generic.View):
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
         current_users = UserInTeam.objects.filter(user=user, team=current_team)
-        context = {}
+        context = {'current_view': self.__class__.__name__}
 
         if user.is_authenticated and current_users.exists():
             context['team'] = current_team
@@ -191,6 +194,9 @@ class CreateTeamView(generic.View):
 
     def post(self, request, *args, **kwargs):
         form = CreateTeamForm(request.POST or None)
+        teams = UserInTeam.objects.filter(user=self.request.user)
+        if teams.count() >= 5:
+            form.add_error(None, 'Вы не можете создать более 5 команд')
         if form.is_valid():
             team_name = form.cleaned_data['team_name']
             current_team = TeamMod.objects.create(team_name=team_name)
@@ -198,10 +204,12 @@ class CreateTeamView(generic.View):
             UserInTeam.objects.create(team=current_team, user=request.user, is_captain=True)
             return HttpResponseRedirect(
                 reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
+
         context = {
             'teams': UserInTeam.objects.filter(user=self.request.user),
             'form': form
         }
+
         return render(self.request, self.template_name, context)
 
 
@@ -209,12 +217,15 @@ class SearchView(FormView):
     template_name = 'RoundTable/result.html'
 
     def get(self, request, *args, **kwargs):
-        if request.is_ajax():
-            q = request.GET.get('q')
-            if q is not None:
+        if self.request.is_ajax():
+            q = self.request.GET.get('q')
+            if q is not "":
                 results = User.objects.filter(Q(username__startswith=q) | Q(last_name__istartswith=q))
 
-                return render(self.request, self.template_name, {'results': results})
+                return render(self.request, self.template_name, {"results": results})
+            else:
+                return render(self.request, self.template_name, {})
+
 
 
 class AddInviteView(generic.View):
@@ -226,3 +237,13 @@ class AddInviteView(generic.View):
         Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
                               username_from=request.user.username, user=User.objects.get(username=username))
         return JsonResponse({'ok': 'ok'})
+
+
+class ConfirmInviteView(generic.View):
+    template_name = 'RoundTable/user_account.html'
+
+    def get(self, request, *args, **kwargs):
+        invite_slug = self.request.GET.get('invite_slug')
+        invite = Invite.objects.get(slug=invite_slug)
+        UserInTeam.objects.create(user=invite.user_for, team=invite.team)
+        return JsonResponse({'ok':'ok'})
