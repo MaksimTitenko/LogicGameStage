@@ -16,8 +16,6 @@ urlpatterns = [
     path('', CreateTeamView.as_view(), name='index'),
     path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),
 
-    # Если захочется сделать UserAccount для каждого пользователя с возможностью просмотра понадобится этот код
-    # path('user_account/<str:user>', UserAccountView.as_view(), name='account_view'),
 
     path('user_account/', UserAccountView.as_view(), name='account_view'),
     path('registration/', registration_view, name='registration'),
