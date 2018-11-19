@@ -69,10 +69,13 @@ def login_view(request):
         if login_user:
             login(request, login_user)
             return HttpResponseRedirect(reverse('index'))
-    context = {'form': form,
-               'current_view': 'login_view'}
-    return render(request, 'RoundTable/login.html', context)
 
+    context = {
+        'form': form,
+        'current_view': 'login'
+    }
+
+    return render(request, 'RoundTable/login.html', context)
 
 ####################################################################################################
 # Класс посвящен авторизации через соцсети.
@@ -183,7 +186,7 @@ class CreateTeamView(generic.View):
             context = {
                 'teams': teams,
                 'form': form,
-                'current_view': self.__class__.__name__
+                'current_view': 'playModePage'
             }
             return render(self.request, self.template_name, context)
         else:
@@ -201,9 +204,12 @@ class CreateTeamView(generic.View):
             UserInTeam.objects.create(team=current_team, user=request.user, is_captain=True)
             return HttpResponseRedirect(
                 reverse_lazy('team_mod', kwargs={'slug': current_team.slug}))
-        context = {'form': form,
-                   'teams': teams,
-                   'current_view': self.__class__.__name__, }
+
+        context = {
+            'teams': UserInTeam.objects.filter(user=self.request.user),
+            'form': form
+        }
+
         return render(self.request, self.template_name, context)
 
 
@@ -213,10 +219,13 @@ class SearchView(FormView):
     def get(self, request, *args, **kwargs):
         if self.request.is_ajax():
             q = self.request.GET.get('q')
-            if q is not None:
+            if q is not "":
                 results = User.objects.filter(Q(username__startswith=q) | Q(last_name__istartswith=q))
 
-                return JsonResponse({"results": list(results)})
+                return render(self.request, self.template_name, {"results": results})
+            else:
+                return render(self.request, self.template_name, {})
+
 
 
 class AddInviteView(generic.View):
