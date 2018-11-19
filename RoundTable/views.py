@@ -147,12 +147,15 @@ class UserAccountView(generic.View):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user_in_team = UserInTeam.objects.filter(user=self.request.user)
+        invites = Invite.objects.filter(user_for=self.request.user)
         context = {
             'user': user,
             'current_view': self.__class__.__name__
         }
         if user_in_team.exists():
             context['user_in_teams'] = user_in_team
+        if invites.exists():
+            context['invites'] = invites
         return render(self.request, self.template_name, context)
 
 
@@ -227,15 +230,14 @@ class SearchView(FormView):
                 return render(self.request, self.template_name, {})
 
 
-
 class AddInviteView(generic.View):
     template_name = 'RoundTable/user_account.html'
 
-    def get(self, request, *args, **kwargs):
-        team_name = self.request.GET.get('team_name')
-        username = self.request.GET.get('username')
+    def post(self, request, *args, **kwargs):
+        team_name = self.request.POST.get('team_name')
+        username = self.request.POST.get('username')
         Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
-                              username_from=request.user.username, user=User.objects.get(username=username))
+                              username_from=request.user.username, user_for=User.objects.get(username=username))
         return JsonResponse({'ok': 'ok'})
 
 

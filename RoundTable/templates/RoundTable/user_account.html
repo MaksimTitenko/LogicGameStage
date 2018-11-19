@@ -16,8 +16,13 @@
                 <a href="{{ current_team.team.get_absolute_url }}"><li class="list-group">{{ current_team.team.team_name }}</li></a>
             {% endfor %}
         </div>
-    <div class="col-sm-4">
+    <div class="col-sm-8">
         <h4>Инвайты</h4>
+        {% for invite in invites %}
+            <div data-slug="{{ invite.slug }}">
+            <p>Вас пригласил {{ invite.username_from }} в команду {{ invite.team }}</p>
+            </div>
+        {% endfor %}
 
     </div>
     </div>

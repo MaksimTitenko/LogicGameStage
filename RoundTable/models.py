@@ -100,4 +100,4 @@ class Invite(models.Model):
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Инвайт от {self.username_from.username} в команду {self.team.team_name} для {self.user_for}'
+        return f'Инвайт от {self.username_from} в команду {self.team.team_name} для {self.user_for.username}'

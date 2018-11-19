@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, TeamMod, UserInTeam
+from .models import User, TeamMod, UserInTeam, Invite
 from django import forms
 
 
@@ -24,7 +24,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {
             'fields': ('username', 'email', 'first_name', 'last_name', 'middle_name',
-                       'gender', 'date_birth', 'phone', 'country', 'city', 'avatar',
+                       'gender', 'date_birth', 'phone', 'avatar',
                        'bio')
         }),
     )
@@ -45,3 +45,4 @@ admin.site.register(User, CustomUserAdmin)
 
 admin.site.register(TeamMod)
 admin.site.register(UserInTeam)
+admin.site.register(Invite)
