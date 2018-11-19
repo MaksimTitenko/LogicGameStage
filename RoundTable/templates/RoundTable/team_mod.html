@@ -1,7 +1,7 @@
 {% extends 'RoundTable/layout.html' %}
 
 {% block content %}
-
+    <input id="team-name" type="hidden" value="{{ team.team_name }}" />
     {% for user in users %}
         {% if user.is_captain %}
             <li class="list-group-item-primary">{{ user.user.username }}</li>
@@ -22,13 +22,6 @@
 {% block extra_js %}
     <script type="text/javascript">
         $( document ).ready( function() {
-            $.ajax({
-                 type:"POST",
-                 url:"http://localhost:8000/edit_favorites/",
-                 success: function(result){
-                     alert(result);
-                 }
-            });
             $( '#playerName' ).keyup( function(e) {
                 $( '#results' ).html( '&nbsp;' ).load( '{% url "search" %}?q=' + $(e.target).val() );
             });

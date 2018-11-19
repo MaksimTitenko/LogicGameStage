@@ -1,12 +1,11 @@
 {% if results|length %}
+    {% csrf_token %}
     <table class="table table-striped">
-
         {% for user in results %}
             {% if user != request.user %}
                 <tr>
-
                     <td>
-                        <a class="invite" href="#">
+                        <a class="invite" href="#" data-user-name="{{ user.username }}">
                             {{ user.username }} {{ user.first_name }} {{ user.last_name }}
                         </a>
                     </td>
@@ -19,3 +18,16 @@
         Your search yielded no results
     </div>
 {% endif %}
+<script>
+    $(document).ready(()=>{
+        $('a').click((e)=>{
+            $.post(
+                "{% url 'add_invite' %}",
+                {
+                    team_name: $('#team-name').val(),
+                    username: $(e.target).data('userName'),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                });
+        });
+    });
+</script>
