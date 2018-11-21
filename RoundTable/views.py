@@ -239,8 +239,10 @@ class AddInviteView(generic.View):
     def post(self, request, *args, **kwargs):
         team_name = self.request.POST.get('team_name')
         username = self.request.POST.get('username')
-        Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
-                              username_from=request.user.username, user_for=User.objects.get(username=username))
+        if not Invite.objects.filter(team=TeamMod.objects.get(team_name=team_name), username_from=request.user.username,
+                              user_for=User.objects.get(username=username)).exists():
+            Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
+                                  username_from=request.user.username, user_for=User.objects.get(username=username))
         return JsonResponse({'ok': 'ok'})
 
 
@@ -266,4 +268,4 @@ class DeleteUserFromTeamView(generic.View):
         user_in_team = UserInTeam.objects.get(team=TeamMod.objects.get(team_name=team_name),
                                               user=User.objects.get(username=username))
         user_in_team.delete()
-        return JsonResponse({'ok':'ok'})
+        return JsonResponse({'ok': 'ok'})
