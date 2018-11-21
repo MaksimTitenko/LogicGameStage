@@ -4,21 +4,26 @@
     {% if request.user == user_captain %}
         <h3>Это сообщение видит только капитан с ником {{ user_captain.username }}</h3>
         <h4>А ты пидор ;))</h4>
-
     {% endif %}
-    <input id="team-name" type="hidden" value="{{ team.team_name }}" />
+
+
+    <input id="team-name" type="hidden" value="{{ team.team_name }}"/>
     {% for user in users %}
         {% if user.is_captain %}
             <li class="list-group-item-primary">{{ user.user.username }}</li>
             <div class="form-signin">
-                <input class="form-control mr-sm-2" id="playerName" type="text" placeholder="Search player names here..."/>
+                <input class="form-control mr-sm-2" id="playerName" type="text"
+                       placeholder="Search player names here..."/>
                 <br/>
                 <div class="margin">
                     <div id="results"></div>
                 </div>
             </div>
         {% else %}
-            <li class="list-group-item-secondary">{{ user.user.username }}</li>
+            <li class="list-group-item-secondary">{{ user.user.username }}<a class="btn btn-danger"
+                                                                             user-id="{{ user.user.username }}"
+                                                                             team-id="{{ team.team_name }}"
+                                                                             href="{% url 'delete_user' %}">Delete</a></li>
         {% endif %}
     {% endfor %}
 
@@ -26,9 +31,9 @@
 
 {% block extra_js %}
     <script type="text/javascript">
-        $( document ).ready( function() {
-            $( '#playerName' ).keyup( function(e) {
-                $( '#results' ).html( '&nbsp;' ).load( '{% url "search" %}?q=' + $(e.target).val() );
+        $(document).ready(function () {
+            $('#playerName').keyup(function (e) {
+                $('#results').html('&nbsp;').load('{% url "search" %}?q=' + $(e.target).val());
             });
         });
     </script>

@@ -22,7 +22,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
     path('confirm_invite', ConfirmInviteView.as_view(), name='confirm_invite'),
-    path('delete_user', DeleteUserFromTeamView.as_view(), name='delete_user'),
+    path('delete_user/', DeleteUserFromTeamView.as_view(), name='delete_user'),
     path('search/', SearchView.as_view(), name='search'),
     path('add_invite', AddInviteView.as_view(), name='add_invite'),
     path('vk_login/', RedirectView.as_view(url=settings.VK_REDIRECT), name='vk_login'),

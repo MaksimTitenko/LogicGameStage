@@ -167,7 +167,7 @@ class TeamView(generic.View):
         slug = self.kwargs.get('slug')
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
-        current_users = UserInTeam.objects.filter(user=user, team=current_team)
+        current_users = UserInTeam.objects.filter(team=current_team)
         user_captain = current_users.get(is_captain=True)
         context = {'current_view': self.__class__.__name__,
                    'user_captain': user_captain.user}
@@ -240,7 +240,7 @@ class AddInviteView(generic.View):
         team_name = self.request.POST.get('team_name')
         username = self.request.POST.get('username')
         if not Invite.objects.filter(team=TeamMod.objects.get(team_name=team_name), username_from=request.user.username,
-                              user_for=User.objects.get(username=username)).exists():
+                                     user_for=User.objects.get(username=username)).exists():
             Invite.objects.create(slug=f'{username}{team_name}', team=TeamMod.objects.get(team_name=team_name),
                                   username_from=request.user.username, user_for=User.objects.get(username=username))
         return JsonResponse({'ok': 'ok'})
