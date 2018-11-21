@@ -77,6 +77,7 @@ def login_view(request):
 
     return render(request, 'RoundTable/login.html', context)
 
+
 ####################################################################################################
 # Класс посвящен авторизации через соцсети.
 # Это одна из проблем, которые придется еще решить
@@ -167,7 +168,9 @@ class TeamView(generic.View):
         user = self.request.user
         current_team = TeamMod.objects.get(slug=slug)
         current_users = UserInTeam.objects.filter(user=user, team=current_team)
-        context = {'current_view': self.__class__.__name__}
+        user_captain = current_users.get(is_captain=True)
+        context = {'current_view': self.__class__.__name__,
+                   'user_captain': user_captain.user}
 
         if user.is_authenticated and current_users.exists():
             context['team'] = current_team
@@ -246,6 +249,21 @@ class ConfirmInviteView(generic.View):
 
     def get(self, request, *args, **kwargs):
         invite_slug = self.request.GET.get('invite_slug')
+        event = self.request.GET.get('event')
         invite = Invite.objects.get(slug=invite_slug)
-        UserInTeam.objects.create(user=invite.user_for, team=invite.team)
+        if event == '1':
+            UserInTeam.objects.create(user=invite.user_for, team=invite.team)
+        invite.delete()
+        return JsonResponse({'ok': 'ok'})
+
+
+class DeleteUserFromTeamView(generic.View):
+    template_name = 'RoundTable/team_mod.html'
+
+    def get(self, request, *args, **kwargs):
+        username = self.request.GET.get('username')
+        team_name = self.request.GET.get('team_name')
+        user_in_team = UserInTeam.objects.get(team=TeamMod.objects.get(team_name=team_name),
+                                              user=User.objects.get(username=username))
+        user_in_team.delete()
         return JsonResponse({'ok':'ok'})

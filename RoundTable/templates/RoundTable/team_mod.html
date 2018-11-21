@@ -1,6 +1,11 @@
 {% extends 'RoundTable/layout.html' %}
 
 {% block content %}
+    {% if request.user == user_captain %}
+        <h3>Это сообщение видит только капитан с ником {{ user_captain.username }}</h3>
+        <h4>А ты пидор ;))</h4>
+
+    {% endif %}
     <input id="team-name" type="hidden" value="{{ team.team_name }}" />
     {% for user in users %}
         {% if user.is_captain %}
