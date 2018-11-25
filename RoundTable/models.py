@@ -99,6 +99,6 @@ class Invite(models.Model):
     user_for = models.OneToOneField(User, null=True, related_name='user_for', on_delete=models.CASCADE)
     user_from = models.OneToOneField(User, null=True, related_name='user_from', on_delete=models.CASCADE)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
-    time = models.DateTimeField(default=timezone.now)
+    time = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f'Инвайт от {self.user_from.username} в команду {self.team.team_name} для {self.user_for.username}'
