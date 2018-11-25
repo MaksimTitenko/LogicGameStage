@@ -20,7 +20,8 @@
         <h4>Инвайты</h4>
         {% for invite in invites %}
             <div data-slug="{{ invite.slug }}">
-            <p>Вас пригласил {{ invite.user_from.username }} в команду {{ invite.team }}</p>
+            <p>Вас пригласил {{ invite.user_from.username }} в команду {{ invite.team }} дата {{ invite.date_sand.day|stringformat:"02d"}}.{{invite.date_sand.month}}.{{invite.date_sand.year}}</p>
+
             </div>
         {% endfor %}
 

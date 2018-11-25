@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
 import os
+
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
-from django.utils import timezone
-from django_extensions import settings
 from django.utils.text import slugify
+
+from www_game_site import settings
 
 
 class User(AbstractUser):
@@ -42,7 +44,7 @@ class User(AbstractUser):
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
     singleplayer_answers = models.IntegerField(default=0, verbose_name='Ответов в одиночной игре: ')
     total_count_of_questions = models.IntegerField(default=0, verbose_name='Количество отыгранных вопросов: ')
-    time = models.DateTimeField(auto_now_add=True)
+    date_creation = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
@@ -100,6 +102,7 @@ class Invite(models.Model):
     user_for = models.ForeignKey(User, null=True, unique=False, related_name='user_for', on_delete=models.CASCADE)
     user_from = models.ForeignKey(User, null=True, unique=False, related_name='user_from', on_delete=models.CASCADE)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
-    time = models.DateTimeField(auto_now_add=True)
+    date_sand = models.DateField(auto_now_add=True)
+
     def __str__(self):
         return f'Инвайт от {self.user_from.username} в команду {self.team.team_name} для {self.user_for.username}'
