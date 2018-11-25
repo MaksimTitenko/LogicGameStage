@@ -42,6 +42,7 @@ class User(AbstractUser):
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
     singleplayer_answers = models.IntegerField(default=0, verbose_name='Ответов в одиночной игре: ')
     total_count_of_questions = models.IntegerField(default=0, verbose_name='Количество отыгранных вопросов: ')
+    time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
@@ -96,8 +97,8 @@ class UserInTeam(models.Model):
 
 class Invite(models.Model):
     slug = models.SlugField()
-    user_for = models.OneToOneField(User, null=True, related_name='user_for', on_delete=models.CASCADE)
-    user_from = models.OneToOneField(User, null=True, related_name='user_from', on_delete=models.CASCADE)
+    user_for = models.ForeignKey(User, null=True, unique=False, related_name='user_for', on_delete=models.CASCADE)
+    user_from = models.ForeignKey(User, null=True, unique=False, related_name='user_from', on_delete=models.CASCADE)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     def __str__(self):
