@@ -1,31 +1,68 @@
 {% extends 'RoundTable/layout.html' %}
+{% load static %}
 {% block content %}
-    <div class="container">
-        <div class="col-sm-4">
-           <p class="text-center"><img src="{{ user.avatar.url }}" width="60%"></p>
-            <h4><strong>Личная информация</strong></h4>
-            <p>Логин: {{ user.username }}</p>
-            <p>Имя: {{ user.first_name }}</p>
-            <p>Фамилия: {{ user.last_name }}</p>
-            <p>email: {{ user.email }}</p>
-            <p>{{ current_view }}</p>
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="collapse d-md-flex pt-2 h-100" id="sidebar">
+            <ul class="nav flex-column flex-nowrap">
+                <li class="header" >{{ user.username }}</li>
+                <li class="nav-item active" data-url="{% url 'account' %}">
+                    <a class="nav-link" href="#">Аккаунт</a>
+                </li>
+                <li id="notifications" class="nav-item" data-invites-exist="{{ isInvitesExist }}" data-url="{% url 'notifications' %}">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'img/haveInvites.svg' %}" width="9%" height="9%" />
+                            Оповещения
+                        </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#stat" data-toggle="collapse" data-target="#stat">Статистика</a>
+                    <div class="collapse" id="stat" aria-expanded="false">
+                        <ul class="flex-column nav">
+                            <li class="nav-item sub-menu-item"><a class="nav-link py-0" href="#">Личная статистика</a></li>
+                            {% for current_team in user_in_teams %}
+                                <li class="nav-item sub-menu-item">
+                                    <a class="nav-link py-0" href="#">{{ current_team.team.team_name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Настройки</a></li>
+            </ul>
         </div>
-        <div class="col-sm-4">
-            <h4>Пространсва</h4>
-            {% for current_team in user_in_teams %}
-                <a href="{{ current_team.team.get_absolute_url }}"><li class="list-group">{{ current_team.team.team_name }}</li></a>
-            {% endfor %}
-        </div>
-    <div class="col-sm-8">
-        <h4>Инвайты</h4>
-        {% for invite in invites %}
-            <div data-slug="{{ invite.slug }}">
-            <p>Вас пригласил {{ invite.user_from.username }} в команду {{ invite.team }}</p>
-            </div>
-        {% endfor %}
+        <div id="results" class="col pt-2 bg-dark auto-vertical-scroll"></div>
+    </div>
+</div>
+<style>
+.circle {
+    animation: spin 1000ms linear;
+}
 
-    </div>
-    </div>
+@keyframes spin {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+@keyframes moveLeftToRight {
+  from   { left: 500px; }
+  to { left: -100px; }
+}
+</style>
+<script>
+    $(document).ready(function(){
+        $('#results').empty().load('{% url "account" %}');
+
+        $("#sidebar li").click(function(e){
+            let $menuItem = $(e.currentTarget);
+            let partialUrl = $menuItem.data("url");
+            if(partialUrl){
+                $('#results').empty().load(partialUrl);
+                $("#sidebar li").removeClass("active");
+                $(e.currentTarget).addClass("active");
+            }
+        });
+    });
+</script>
 {% endblock content %}
 {% block jquery %}
 {% endblock %}

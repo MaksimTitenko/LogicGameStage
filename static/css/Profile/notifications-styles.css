@@ -1,0 +1,38 @@
+.notification-container{
+        padding-top: 15px;
+        padding-left: 7.5%;
+        padding-right: 7.5%
+    }
+
+.notification{
+    background-color: #508B93;
+    padding: 3% 6%;
+}
+
+    .notification .image-container{
+        width: 13%;
+    }
+
+    .notification .message-container{
+        width: 87%;
+        padding-left: 3%;
+        color: white;
+        font-weight: bold;
+    }
+
+        .notification .message-container p{
+            font-size: 25px;
+            margin-block-end: 2px;
+        }
+
+        .notification .message-container .time-container{
+            color: #C3C3C3;
+        }
+
+        .notification .message-container .button-group a{
+            width: 35%;
+        }
+
+    .notification .message-container .button-group a:not(:first-child){
+        margin-left: 5%;
+    }

@@ -1,0 +1,20 @@
+body.login,
+body.registration_view {
+    background: url("/static/img/loginFormBackground.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+body.playModePage {
+    background: url("/static/img/gameModBack.svg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg-dark{
+    background-color: #2E5459 !important;
+}

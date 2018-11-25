@@ -1,0 +1,75 @@
+nav.logo img{
+    width: 90%;
+}
+
+nav.logo .logo-text-container{
+    font-weight: bold;
+}
+
+nav.logo .logo-container{
+    margin-left: 20px;
+}
+
+nav.actions .actions-container{
+    margin-right: 20px;
+}
+
+
+body.UserAccountView nav.logo,
+body.UserAccountView nav.actions{
+    background-color: #5EF2C5
+}
+
+#sidebar{
+    background-color: #406F76;
+    padding-left: 0;
+    padding-right: 0;
+    width: 25%;
+}
+
+    #sidebar ul{
+        width: 100%;
+    }
+
+        #sidebar ul li{
+            text-align: center;
+        }
+
+            #sidebar ul li a{
+                color: white;
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+                #sidebar ul li.active:not(.sub-menu-item){
+                    border-right: 7px solid #5EF2C5;
+                }
+
+                    #sidebar ul li.active:not(.sub-menu-item) a{
+                        color: #5EF2C5;
+                    }
+
+            #sidebar ul li a:hover,
+            #sidebar ul li.active{
+                background-color: #2E5459;
+            }
+
+    #sidebar li.header{
+        padding-top: 30px;
+        padding-bottom: 20px;
+        color: #5EF2C5;
+        font-weight: bold;
+        font-size: 26px;
+    }
+
+li#notifications[data-invites-exist=True] a{
+    padding-right: 31%;
+}
+
+li#notifications[data-invites-exist=True] img{
+    margin-right: 30%;
+}
+
+li#notifications:not([data-invites-exist=True]) img{
+    display: none;
+}

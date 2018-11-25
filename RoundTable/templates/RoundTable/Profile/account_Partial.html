@@ -1,0 +1,19 @@
+{% load static %}
+
+<div class="container">
+    <div id="avatar-container" class="container text-center">
+        <img name="cover" src="{% static 'img/refreshAvatar.svg' %}" width="100" height="100" />
+        <img name="avatar" src="{{ user.avatar.url }}" width="100" height="100" />
+    </div>
+</div>
+
+<style>
+    #avatar-container:hover img[name=cover]{
+        display: inline;
+    }
+</style>
+<script>
+    $("[name=cover]").click(function(e){
+        $(e.currentTarget).siblings("[name=avatar]").addClass("circle");
+    });
+</script>

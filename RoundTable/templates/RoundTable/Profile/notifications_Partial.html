@@ -1,0 +1,51 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/Profile/notifications-styles.css' %}">
+{% for invite in invites %}
+<div class="container notification-container">
+    <div class="jumbotron notification">
+        <div class="row">
+            <div class="image-container">
+                <img src="{% static 'img/invite.svg' %}" height="90%" width="90%">
+            </div>
+            <div class="message-container">
+                <div class="d-table w-100">
+                    <h1 class="d-table-cell">Приглашение</h1>
+                    <span class="d-table-cell text-right time-container">{{ invite.time }}</span>
+                </div>
+                <p>
+                    <span class="light-color">{{ invite.user_from.first_name }} {{ invite.user_from.last_name }}</span> приглашает вас
+                    вступить в его команду <span class="light-color">{{ invite.team.team_name }}</span>.
+                </p>
+                <div class="button-group">
+                    <a href="/" class="btn default-button dark-button" role="button">Отклонить</a>
+                    <a href="/" class="btn default-button light-button" role="button">Принять</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="container notification-container">
+    <div class="jumbotron notification">
+        <div class="row">
+            <div class="image-container">
+                <img src="{% static 'img/welcomeMessage.svg' %}" height="90%" width="90%">
+            </div>
+            <div class="message-container">
+                <div class="d-table w-100">
+                    <h1 class="d-table-cell">Добро пожаловать</h1>
+                    <span class="d-table-cell text-right time-container">{{ timeOfRegistration }}</span>
+                </div>
+                <p>
+                    Команда <span class="light-color">RoundTable</span> приветствует вас в своём клубе
+                    знатоков и желает увлекательных игр и эффективных тренировок.
+                </p>
+                <p>
+                    Связаться с нами можно через почтовый ящик <span class="light-color">roundtablegame@gmail.com</span>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

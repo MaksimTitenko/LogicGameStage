@@ -3,28 +3,53 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
-<div class="row">
-    <div class="col">
-        <img src="{% static 'img/login.svg' %}" height="600" width="400" />
+<div class="container h-100">
+<div class="row h-100">
+    <div class="w-35">
+        <img src="{% static 'img/login.svg' %}" height="90%" width="115%" />
     </div>
-    <div class="col">
+    <div class="w-65">
         <h1 class="login-header">Будьте готовы <br/> блеснуть своим умом</h1>
-        <p style="font-weight: bold; width: 680px;text-align: right;">
-            Команда - это не просто совокупность знаний, команда - это единый отлаженный механизм.
-            "Лампочка" вашей идеи никогда не осветит комнату, если не включить её в цепь.
-            Организовывать такие цепи и предоставлять саму комнату и призван RoundTable.
-            <br/>
-            Мы не сделаем каждого участника вашей команды эффективнее - мы сделаем эффективнее  команду целиком.
-        </p>
-        <div class="container-fluid col-md-7">
+        <div class="pull-right" style="width: 75%">
+            <p>
+                Команда - это не просто совокупность знаний, команда - это единый отлаженный механизм.
+                Организовывать такие цепи и предоставлять саму комнату и призван RoundTable.
+            </p>
+            <p>
+                Мы не сделаем каждого участника вашей команды эффективнее - мы сделаем эффективнее  команду целиком.
+            </p>
+        </div>
+        <div class="container-fluid col-7 pull-right no-side-padding pt-2">
             <form action="" method="post" class="pull-right">
                 {% csrf_token %}
-                {{ form|crispy }}
-
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <a class="btn btn-primary" href="{% url 'registration' %}" role="button">Регистрация</a>
-                    <input type="submit" class="btn btn-success btn-block" value="Войти в систему">
+                <div class="input-group">
+                    <div class="form-group w-100">
+                        <input id="id_username"
+                           name="username"
+                           placeholder="Введите логин..."
+                           maxlength="30"
+                           required="required"
+                           class="default-input"/>
+                    </div>
+                    <div class="form-group w-100">
+                        <input id="id_password"
+                           name="password"
+                           placeholder="Введите пароль..."
+                           maxlength="128"
+                           type="password"
+                           required="required"
+                           class="default-input" />
+                    </div>
+                    <div class="form-group w-100 text-center pt-2">
+                        <div class="btn-group pull-left w-47" role="group" aria-label="Basic example">
+                            <a class="btn default-button dark-button w-100" href="{% url 'registration' %}" role="button">
+                                НОВЫЙ ПРОФИЛЬ
+                            </a>
+                        </div>
+                        <div class="btn-group pull-right w-47" role="group" aria-label="Basic example">
+                            <input type="submit" class="btn default-button light-button w-100" value="ВОЙТИ">
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -32,10 +57,19 @@
 </div>
 </div>
 <style>
+
     .login-header{
         text-align: right;
         color: #5EF2C5;
         font-weight: bold;
+    }
+
+    p{
+        text-align: justify;
+        text-indent: 10%;
+        font-weight: bold;
+        color: #FFF;
+        font-size: 20px;
     }
 </style>
 {% endblock content %}

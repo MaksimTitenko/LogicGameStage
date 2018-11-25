@@ -10,14 +10,23 @@ from .views import (
     login_view,
     CallbackView,
     UserAccountView,
-    CreateTeamView, TeamView, SearchView, AddInviteView, ConfirmInviteView, DeleteUserFromTeamView)
+    CreateTeamView,
+    TeamView,
+    SearchView,
+    AddInviteView,
+    ConfirmInviteView,
+    DeleteUserFromTeamView,
+    AccountPartial,
+    NotificationsPartial)
 
 urlpatterns = [
     path('', CreateTeamView.as_view(), name='index'),
     path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),
 
 
-    path('user_account/', UserAccountView.as_view(), name='account_view'),
+    path('profile/', UserAccountView.as_view(), name='account_view'),
+    path('profile/account', AccountPartial.as_view(), name='account'),
+    path('profile/notifications', NotificationsPartial.as_view(), name='notifications'),
     path('registration/', registration_view, name='registration'),
     path('login/', login_view, name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),

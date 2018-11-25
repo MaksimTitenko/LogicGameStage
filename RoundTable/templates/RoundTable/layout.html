@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en" class="h-100">
     <head>
         <meta charset="UTF-8">
         {% include 'RoundTable/base/css.html' %}
@@ -8,10 +8,14 @@
         <title>News Site - {% block title %}Main Page{% endblock %}</title>
     </head>
     <body class="{{ current_view }} d-flex flex-column h-100">
-        {% include 'RoundTable/base/top_menu.html' %}
+        <header class="container-fluid no-padding">
+            {% include 'RoundTable/base/top_menu.html' %}
+        </header>
+        <main class="container-fluid no-side-padding h-100">
         {% block content %}
             <h1>Main Page</h1>
         {% endblock content %}
+        </main>
         {% block extra_js %}
         {% endblock extra_js %}
     </body>

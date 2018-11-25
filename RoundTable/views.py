@@ -148,15 +148,14 @@ class UserAccountView(generic.View):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user_in_team = UserInTeam.objects.filter(user=self.request.user)
-        invites = Invite.objects.filter(user_for=self.request.user)
+        invites = Invite.objects.filter(user_for=user)
         context = {
             'user': user,
+            'isInvitesExist': invites.exists(),
             'current_view': self.__class__.__name__
         }
         if user_in_team.exists():
             context['user_in_teams'] = user_in_team
-        if invites.exists():
-            context['invites'] = invites
         return render(self.request, self.template_name, context)
 
 
@@ -231,6 +230,28 @@ class SearchView(FormView):
                 return render(self.request, self.template_name, {"results": results})
             else:
                 return render(self.request, self.template_name, {})
+
+
+class AccountPartial(FormView):
+    template_name = 'RoundTable/Profile/account_Partial.html'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            context = {'user': self.request.user}
+            return render(self.request, self.template_name, context)
+
+
+class NotificationsPartial(FormView):
+    template_name = 'RoundTable/Profile/notifications_Partial.html'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            user = self.request.user
+            context = {
+                'invites': Invite.objects.filter(user_for=user).order_by('-time'),
+                'timeOfRegistration': user.time
+            }
+            return render(self.request, self.template_name, context)
 
 
 class AddInviteView(generic.View):
