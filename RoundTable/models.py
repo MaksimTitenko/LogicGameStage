@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 import os
 
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+from django.utils import dateformat
 from django.utils.text import slugify
 
 from www_game_site import settings
@@ -106,3 +106,8 @@ class Invite(models.Model):
 
     def __str__(self):
         return f'Инвайт от {self.user_from.username} в команду {self.team.team_name} для {self.user_for.username}'
+
+    def date_converter(self):
+        months = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа',
+                  9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
+        return f'{self.date_sand.day} {months[self.date_sand.month]} {self.date_sand.year}'
