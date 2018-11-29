@@ -34,20 +34,6 @@
         <div id="results" class="col pt-2 bg-dark auto-vertical-scroll"></div>
     </div>
 </div>
-<style>
-.circle {
-    animation: spin 1000ms linear;
-}
-
-@keyframes spin {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-@keyframes moveLeftToRight {
-  from   { left: 500px; }
-  to { left: -100px; }
-}
-</style>
 <script>
     $(document).ready(function(){
         $('#results').empty().load('{% url "account" %}');

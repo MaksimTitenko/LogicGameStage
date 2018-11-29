@@ -1,19 +1,45 @@
 {% load static %}
 
-<div class="container">
-    <div id="avatar-container" class="container text-center">
+<div class="container text-center">
+    <div id="avatar-container" class="container text-center d-inline-block">
         <img name="cover" src="{% static 'img/refreshAvatar.svg' %}" width="100" height="100" />
         <img name="avatar" src="{{ user.avatar.url }}" width="100" height="100" />
     </div>
 </div>
 
 <style>
+
+    div.test {
+      position: relative;
+      width: fit-content;
+      height: fit-content;
+    }
+
     #avatar-container:hover img[name=cover]{
         display: inline;
+    }
+    .circle {
+        animation: spin 1000ms linear;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(360deg); }
+      to
+      {
+          transform: rotate(0deg);
+          left: -100px;
+      }
+    }
+    @keyframes moveLeftToRight {
+      from   { left: 500px; }
+      to { left: -100px; }
     }
 </style>
 <script>
     $("[name=cover]").click(function(e){
         $(e.currentTarget).siblings("[name=avatar]").addClass("circle");
+        $(e.currentTarget).closest("#avatar-container").animate({
+            left: '-=250px'
+        },1100);
     });
 </script>
