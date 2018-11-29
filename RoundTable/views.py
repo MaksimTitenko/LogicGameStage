@@ -248,8 +248,8 @@ class NotificationsPartial(FormView):
         if self.request.is_ajax():
             user = self.request.user
             context = {
-                'invites': Invite.objects.filter(user_for=user).order_by('-time'),
-                'timeOfRegistration': user.time
+                'invites': Invite.objects.filter(user_for=user).order_by('-date_sand'),
+                'timeOfRegistration': user.date_creation
             }
             return render(self.request, self.template_name, context)
 
