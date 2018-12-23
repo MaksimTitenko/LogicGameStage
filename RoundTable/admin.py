@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, TeamMod, UserInTeam, Invite
+from .models import User, TeamMod, UserInTeam, Invite, Question, ListOffset, QuestionTopic
 from django import forms
 
 
@@ -12,6 +12,10 @@ class ModelFormUser(forms.ModelForm):
     class Meta:
         fields = '__all__'
         model = User
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("text",)}
 
 
 class CustomUserAdmin(UserAdmin):
@@ -29,20 +33,15 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    # add_fieldsets = (
-    #     (None, {
-    #         'classes': ('wide',),
-    #         'fields': ('username', 'email', 'password1', 'password2', 'is_stuff', 'is_superuser')
-    #     })
-    # )
-
     search_fields = ('username', 'email')
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions')
 
 
 admin.site.register(User, CustomUserAdmin)
-
+admin.site.register(ListOffset)
+admin.site.register(QuestionTopic)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(TeamMod)
 admin.site.register(UserInTeam)
 admin.site.register(Invite)
