@@ -50,7 +50,6 @@ class User(AbstractUser):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
 
 
-
 class TeamMod(models.Model):
     team_name = models.CharField(max_length=30, verbose_name='Название пространсва')
     slug = models.SlugField(max_length=30)
@@ -106,3 +105,29 @@ class Invite(models.Model):
         months = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа',
                   9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
         return f'{self.date_sand.day} {months[self.date_sand.month]} {self.date_sand.year}'
+
+
+class Answers(models.Model):
+    answer = models.CharField(max_length=100)
+
+
+class ListOffset(models.Model):
+    offset = models.CharField(max_length=100, verbose_name='Зачёт')
+
+
+class QuestionTopic(models.Model):
+    topic = models.CharField(max_length=100, verbose_name='Тема')
+
+
+class Question(models.Model):
+    def image_upload_to(self, filename):
+        return os.path.join('RoundTable/images/', self.text + os.path.splitext(filename)[1])
+
+    text = models.CharField(max_length=300, verbose_name='Текст вопроса')
+    comment = models.CharField(max_length=255, verbose_name='Комментарий')
+    image = models.ImageField(upload_to=image_upload_to, null=True, blank=True, verbose_name='Пикча')
+    answers = models.ForeignKey(Answers, on_delete=models.CASCADE)
+    topics = models.ForeignKey(QuestionTopic, on_delete=models.SET_NULL)
+    offsets = models.ForeignKey(ListOffset, on_delete=models.SET_NULL)
+
+
