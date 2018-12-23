@@ -44,16 +44,11 @@ class User(AbstractUser):
     multiplayer = models.IntegerField(default=0, verbose_name='Командных игр: ')
     singleplayer_answers = models.IntegerField(default=0, verbose_name='Ответов в одиночной игре: ')
     total_count_of_questions = models.IntegerField(default=0, verbose_name='Количество отыгранных вопросов: ')
-    date_creation = models.DateField(auto_now_add=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
-    # Если захочется сделать UserAccount для каждого пользователя с возможностью просмотра понадобится этот код
 
-    # def get_absolute_url(self):
-    #     return reverse('account_view', kwargs={'user': self.username})
-
-    # плейсхолдеры для телефона, мыла и даты рождения!
 
 
 class TeamMod(models.Model):
@@ -102,7 +97,7 @@ class Invite(models.Model):
     user_for = models.ForeignKey(User, null=True, unique=False, related_name='user_for', on_delete=models.CASCADE)
     user_from = models.ForeignKey(User, null=True, unique=False, related_name='user_from', on_delete=models.CASCADE)
     team = models.ForeignKey(TeamMod, on_delete=models.CASCADE)
-    date_sand = models.DateField(auto_now_add=True)
+    date_sand = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Инвайт от {self.user_from.username} в команду {self.team.team_name} для {self.user_for.username}'

@@ -4,3 +4,5 @@ main_app/
 .idea/
 DjangoBlog/
 course-materials/
+db.sqlite3
+migrations/
