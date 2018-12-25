@@ -38,7 +38,7 @@ urlpatterns = [
     path('vk_callback/', CallbackView.vk_callback, name='vk_callback'),
     path('facebook_login/', RedirectView.as_view(url=settings.FACEBOOK_REDIRECT), name='facebook_login'),
     path('facebook_callback/', CallbackView.facebook_callback, name='facebook_callback'),
-    path('game/', QuestionView.as_view(), name='game_mod')
+    path('game/<slug:slug>', QuestionView.as_view(), name='game_mod')
 
 ]
 

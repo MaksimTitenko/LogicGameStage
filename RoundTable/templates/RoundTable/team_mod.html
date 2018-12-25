@@ -22,10 +22,13 @@
             <li class="list-group-item-secondary">{{ user.user.username }}<a class="btn btn-danger"
                                                                              user-id="{{ user.user.username }}"
                                                                              team-id="{{ team.team_name }}"
-                                                                             href="{% url 'delete_user' %}">Delete</a></li>
+                                                                             href="{% url 'delete_user' %}">Delete</a>
+            </li>
         {% endif %}
     {% endfor %}
-
+    <form action="{% url 'game_mod'  slug %}">
+        <button type="submit">Начать игру</button>
+    </form>
 {% endblock content %}
 
 {% block extra_js %}

@@ -174,6 +174,7 @@ class TeamView(generic.View):
         if user.is_authenticated and current_users.exists():
             context['team'] = current_team
             context['users'] = current_users
+            context['slug'] = slug
 
             return render(self.request, self.template_name, context)
         else:
@@ -291,12 +292,12 @@ class DeleteUserFromTeamView(TemplateView):
         user_in_team.delete()
         return JsonResponse({'ok': 'ok'})
 
+
 class QuestionView(TemplateView):
     template_name = 'RoundTable/question.html'
 
     def get(self, request, *args, **kwargs):
-
         context = {
             'question': Question.objects.random()
         }
-        return render(request, self.template_name, context )
+        return render(request, self.template_name, context)
