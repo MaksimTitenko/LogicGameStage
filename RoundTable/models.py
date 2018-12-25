@@ -4,11 +4,12 @@ import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
-from django.utils import dateformat
 from django.utils.text import slugify
 
-from www_game_site import settings
+from django.db.models.aggregates import Count
+from random import randint
 
+NUMBER_OF_QUESTIONS = 2
 
 class User(AbstractUser):
     SEX_CHOICES = (
@@ -107,27 +108,43 @@ class Invite(models.Model):
         return f'{self.date_sand.day} {months[self.date_sand.month]} {self.date_sand.year}'
 
 
-class Answers(models.Model):
-    answer = models.CharField(max_length=100)
-
-
 class ListOffset(models.Model):
     offset = models.CharField(max_length=100, verbose_name='Зачёт')
 
 
 class QuestionTopic(models.Model):
     topic = models.CharField(max_length=100, verbose_name='Тема')
+    def __str__(self):
+        return f'Тема {self.topic}'
+
+
+class QuestionManager(models.Manager):
+    def random(self):
+        count = self.aggregate(count=Count('id'))['count']
+        random_index = randint(0, count - 1)
+        return self.all()[random_index]
 
 
 class Question(models.Model):
     def image_upload_to(self, filename):
         return os.path.join('RoundTable/images/', self.text + os.path.splitext(filename)[1])
-
-    text = models.CharField(max_length=300, verbose_name='Текст вопроса')
-    comment = models.CharField(max_length=255, verbose_name='Комментарий')
+    objects = QuestionManager()
+    title = models.CharField(max_length=50, verbose_name='Заголовок', null=True)
+    text = models.TextField(max_length=600, verbose_name='Текст вопроса')
+    slug = models.SlugField(null=True)
+    comment = models.CharField(max_length=600, verbose_name='Комментарий', blank=True)
     image = models.ImageField(upload_to=image_upload_to, null=True, blank=True, verbose_name='Пикча')
-    answers = models.ForeignKey(Answers, on_delete=models.CASCADE)
-    topics = models.ForeignKey(QuestionTopic, on_delete=models.SET_NULL)
-    offsets = models.ForeignKey(ListOffset, on_delete=models.SET_NULL)
+    answers = models.CharField(max_length=300, verbose_name='Ответы')
+    comment_to_answer = models.TextField(max_length=600, verbose_name='Комментарий к ответу', blank=True)
+    topics = models.ForeignKey(QuestionTopic, on_delete=models.SET_NULL, null=True)
+    offsets = models.ForeignKey(ListOffset, on_delete=models.SET_NULL, null=True)
 
 
+class GameSession(models.Model):
+    questions = models.ManyToManyField(Question)
+    team = models.OneToOneField(TeamMod, on_delete=models.CASCADE, null=True)
+    counter = models.PositiveIntegerField(default=0)
+    def generate_session(self):
+        for i in range(NUMBER_OF_QUESTIONS):
+            self.questions.add(Question.objects.random())
+            self.questions.save()

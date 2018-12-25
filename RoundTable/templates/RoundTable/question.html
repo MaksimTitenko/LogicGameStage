@@ -1,0 +1,7 @@
+{% extends 'RoundTable/layout.html' %}
+{% block content %}
+    <h1>{{ question.title }}</h1>
+    <p>{{ question.text }}</p>
+    <p>{{ question.comment }}</p>
+    <img src="{{ question.image.url }}" alt="Smiley face" width="60%">
+{% endblock %}

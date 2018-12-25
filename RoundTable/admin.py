@@ -15,7 +15,7 @@ class ModelFormUser(forms.ModelForm):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("text",)}
+    prepopulated_fields = {"slug": ("title",)}
 
 
 class CustomUserAdmin(UserAdmin):

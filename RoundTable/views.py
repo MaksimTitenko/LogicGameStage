@@ -4,7 +4,7 @@ from django.views.generic import FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod, UserInTeam, Invite
+from RoundTable.models import User, TeamMod, UserInTeam, Invite, Question
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
@@ -280,7 +280,7 @@ class ConfirmInviteView(generic.View):
         return JsonResponse({'ok': 'ok'})
 
 
-class DeleteUserFromTeamView(generic.View):
+class DeleteUserFromTeamView(TemplateView):
     template_name = 'RoundTable/team_mod.html'
 
     def get(self, request, *args, **kwargs):
@@ -290,3 +290,13 @@ class DeleteUserFromTeamView(generic.View):
                                               user=User.objects.get(username=username))
         user_in_team.delete()
         return JsonResponse({'ok': 'ok'})
+
+class QuestionView(TemplateView):
+    template_name = 'RoundTable/question.html'
+
+    def get(self, request, *args, **kwargs):
+
+        context = {
+            'question': Question.objects.random()
+        }
+        return render(request, self.template_name, context )
