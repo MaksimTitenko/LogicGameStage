@@ -143,8 +143,11 @@ class Question(models.Model):
 class GameSession(models.Model):
     questions = models.ManyToManyField(Question)
     team = models.OneToOneField(TeamMod, on_delete=models.CASCADE, null=True)
-    counter = models.PositiveIntegerField(default=0)
+    counter = models.IntegerField(default=0)
+    number_of_question = models.IntegerField(default=NUMBER_OF_QUESTIONS)
     def generate_session(self):
-        for i in range(NUMBER_OF_QUESTIONS):
+        for _ in range(NUMBER_OF_QUESTIONS):
             self.questions.add(Question.objects.random())
-            self.questions.save()
+
+
+

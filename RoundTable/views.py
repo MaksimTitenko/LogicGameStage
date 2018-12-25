@@ -1,14 +1,13 @@
-from django.db.models import Q
-from django.template import RequestContext
+from django.db.models import Q, F, Value
 from django.views.generic import FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import login, authenticate
 
-from RoundTable.models import User, TeamMod, UserInTeam, Invite, Question
+from RoundTable.models import *
 from .forms import LoginForm, RegistrationForm, CreateTeamForm
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -297,7 +296,29 @@ class QuestionView(TemplateView):
     template_name = 'RoundTable/question.html'
 
     def get(self, request, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        team = TeamMod.objects.get(slug=slug)
+        try:
+            game_session = GameSession.objects.get(team=team)
+        except:
+            game_session = GameSession.objects.create(team=team)
+            game_session.generate_session()
         context = {
-            'question': Question.objects.random()
+            'question': game_session.questions.all()[game_session.counter],
+            'slug': slug,
+            'counter': game_session.counter
         }
+
         return render(request, self.template_name, context)
+
+    def post(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        team = TeamMod.objects.get(slug=slug)
+        game_session = GameSession.objects.get(team=team)
+
+        if game_session.counter >= game_session.number_of_question - 1:
+            game_session.delete()
+            return HttpResponseRedirect(reverse_lazy('team_mod', kwargs={'slug': slug}))
+        game_session.counter = F('counter') + 1
+        game_session.save(update_fields=["counter"])
+        return HttpResponseRedirect(reverse_lazy('game_mod', kwargs={'slug': slug}))

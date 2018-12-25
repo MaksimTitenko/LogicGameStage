@@ -1,28 +1,13 @@
-from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from django.urls import reverse_lazy
 from django.views.generic import RedirectView
 
-from .views import (
-    registration_view,
-    login_view,
-    CallbackView,
-    UserAccountView,
-    CreateTeamView,
-    TeamView,
-    SearchView,
-    AddInviteView,
-    ConfirmInviteView,
-    DeleteUserFromTeamView,
-    AccountPartial,
-    NotificationsPartial, QuestionView)
+from .views import *
 
 urlpatterns = [
     path('', CreateTeamView.as_view(), name='index'),
     path('team_mod/<slug:slug>', TeamView.as_view(), name='team_mod'),
-
 
     path('profile/', UserAccountView.as_view(), name='account_view'),
     path('profile/account', AccountPartial.as_view(), name='account'),
@@ -38,7 +23,7 @@ urlpatterns = [
     path('vk_callback/', CallbackView.vk_callback, name='vk_callback'),
     path('facebook_login/', RedirectView.as_view(url=settings.FACEBOOK_REDIRECT), name='facebook_login'),
     path('facebook_callback/', CallbackView.facebook_callback, name='facebook_callback'),
-    path('game/<slug:slug>', QuestionView.as_view(), name='game_mod')
+    path('game/<slug:slug>', QuestionView.as_view(), name='game_mod'),
 
 ]
 

@@ -1,7 +1,12 @@
 {% extends 'RoundTable/layout.html' %}
 {% block content %}
     <h1>{{ question.title }}</h1>
+    <h2>{{ counter }}</h2>
     <p>{{ question.text }}</p>
     <p>{{ question.comment }}</p>
     <img src="{{ question.image.url }}" alt="Smiley face" width="60%">
+    <form action="{% url 'game_mod' slug %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Следующий вопрос</button>
+    </form>
 {% endblock %}

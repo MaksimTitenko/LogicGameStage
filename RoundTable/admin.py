@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, TeamMod, UserInTeam, Invite, Question, ListOffset, QuestionTopic
+from .models import User, TeamMod, UserInTeam, Invite, Question, ListOffset, QuestionTopic, GameSession
 from django import forms
 
 
@@ -45,3 +45,4 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(TeamMod)
 admin.site.register(UserInTeam)
 admin.site.register(Invite)
+admin.site.register(GameSession)
