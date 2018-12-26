@@ -1,45 +1,163 @@
 {% load static %}
 
-<div class="container text-center">
+<div class="account-container container text-center w-50">
     <div id="avatar-container" class="container text-center d-inline-block">
         <img name="cover" src="{% static 'img/refreshAvatar.svg' %}" width="100" height="100" />
         <img name="avatar" src="{{ user.avatar.url }}" width="100" height="100" />
     </div>
+    <div class="avatar-manage-container">
+        Управление аватаром
+        <div class="form-group w-100 text-center pt-2">
+            <div class="btn-group pull-left w-47" role="group" aria-label="Basic example">
+                <a class="btn default-button dark-button w-100" role="button">
+                    СБРОСИТЬ
+                </a>
+            </div>
+
+            <div class="btn-group pull-right w-47" role="group" aria-label="Basic example">
+                <label for="id_avatar" class="default-button light-button">ОБЗОР</label>
+                <input type="file" name="avatar" accept="image/*" class="clearablefileinput" id="id_avatar">
+            </div>
+        </div>
+    </div>
+    <div class="input-group account-inputs">
+        <input id="id_username"
+           name="username"
+           placeholder="Введите логин..."
+           maxlength="30"
+           required="required"
+           value="{{ user.username }}"
+           class="default-input"/>
+
+    <input id="id_first_name"
+           name="first_name"
+           placeholder="Введите имя..."
+           maxlength="30"
+           required="required"
+           value = "{{ user.first_name }}"
+           class="default-input"/>
+
+    <input id="id_last_name"
+           name="last_name"
+           placeholder="Введите фамилию..."
+           maxlength="30"
+           required="required"
+           value="{{ user.last_name }}"
+           class="default-input"/>
+
+    <input id="id_email"
+           name="email"
+           placeholder="Введите электронную почту..."
+           maxlength="254"
+           required="required"
+           value="{{ user.email }}"
+           class="default-input emailinput"/>
+    </div>
+    <div class="submit-account-buttons">
+        <div class="btn-group pull-right w-47" role="group" aria-label="Basic example">
+            <input type="submit" class="btn default-button light-button w-100" value="СОХРАНИТЬ">
+        </div>
+    </div>
+
 </div>
 
 <style>
 
-    div.test {
-      position: relative;
-      width: fit-content;
-      height: fit-content;
+    label[for=id_avatar] {
+        cursor: pointer;
+    }
+
+    #id_avatar {
+       opacity: 0;
+       position: absolute;
+       z-index: -1;
+    }
+
+    .avatar-manage-container{
+        width: 65%;
+        float: right;
+        text-align: left;
+        font-weight: bold;
+        color: #FFF;
+        font-size: 20px;
+        position: relative;
+        left: 70%;
+    }
+
+    .account-inputs, .submit-account-buttons{
+        padding-top: 3%;
+    }
+
+        .account-inputs input{
+            margin-top: 5%;
+        }
+
+    .account-container{
+        padding-top: 8%;
+        overflow: hidden;
+    }
+
+    #avatar-container{
+        left: 32%;
     }
 
     #avatar-container:hover img[name=cover]{
         display: inline;
     }
-    .circle {
-        animation: spin 1000ms linear;
+    .spin-left {
+        animation: spin-left 1000ms linear;
     }
 
-    @keyframes spin {
+    .spin-right {
+        animation: spin-right 1000ms linear;
+    }
+
+    @keyframes spin-left {
       from { transform: rotate(360deg); }
       to
       {
           transform: rotate(0deg);
-          left: -100px;
       }
     }
-    @keyframes moveLeftToRight {
-      from   { left: 500px; }
-      to { left: -100px; }
+
+    @keyframes spin-right {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 </style>
+
 <script>
-    $("[name=cover]").click(function(e){
-        $(e.currentTarget).siblings("[name=avatar]").addClass("circle");
-        $(e.currentTarget).closest("#avatar-container").animate({
-            left: '-=250px'
-        },1100);
-    });
+    $("[name=cover]").click(function(){ showAvatarManagement() });
+
+    $('.avatar-manage-container a').click(function(){ showAvatarManagement(false) });
+
+    function showAvatarManagement(isShow = true) {
+        var $avatar = $("[name=avatar]");
+        var currentClassName;
+        var oppositeClassName;
+        var avatarLeftCondition;
+        var avatarManagementLeftCondition;
+        if(isShow){
+            currentClassName = 'spin-left';
+            oppositeClassName = 'spin-right';
+            avatarLeftCondition = '-=40%';
+            avatarManagementLeftCondition = '-=80%';
+        }else{
+            currentClassName = 'spin-right';
+            oppositeClassName = 'spin-left';
+            avatarLeftCondition = '+=40%';
+            avatarManagementLeftCondition = '+=80%';
+        }
+
+        if(!$avatar.is('.' + currentClassName)){
+            $avatar.removeClass(oppositeClassName);
+            $avatar.addClass(currentClassName);
+            $("#avatar-container").animate({
+                left: avatarLeftCondition
+            },1100);
+            $(".avatar-manage-container").animate({
+                left: avatarManagementLeftCondition
+            },1200);
+        }
+    }
 </script>
